@@ -1,0 +1,55 @@
+/* Reset default browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Set global font and background */
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f9fafb;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  /* Links */
+  a {
+    color: #7c3aed;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Buttons */
+  button {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:focus {
+    outline: none;
+  }
+  
+  /* Container and spacing utilities */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  /* Utility classes */
+  .text-center {
+    text-align: center;
+  }
+  
+  .mt-4 {
+    margin-top: 1rem;
+  }
+  
+  .mb-4 {
+    margin-bottom: 1rem;
+  }
+  
