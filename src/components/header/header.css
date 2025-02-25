@@ -1,64 +1,114 @@
-/* header.css */
+/* Logo Styling */
+.logo-img {
+  height: 40px;
+  width: auto;
+  margin-right: 10px;
+  border-radius: 5px;
+}
 
+/* Header Styling */
 header {
-    background-color: #2874f0;
-    padding: 10px 0;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .navbar {
-    padding: 0.8rem 1.5rem;
-  }
-  
-  .navbar-brand {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #fff;
-    text-transform: uppercase;
-  }
-  
-  .navbar-toggler {
-    border: none;
-    outline: none;
-  }
-  
-  .navbar-toggler-icon {
-    background-color: #fff;
-  }
-  
+  background-color: #2874f0;
+  padding: 10px 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar {
+  padding: 0.8rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #6cdfdf;
+  text-transform: uppercase;
+}
+
+.navbar-toggler {
+  border: none;
+  outline: none;
+}
+
+.navbar-toggler-icon {
+  background-color: #161414;
+}
+
+.navbar-nav {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.nav-item {
+  margin: 0 10px;
+}
+
+.nav-link {
+  color: #42f2f8 !important;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #47e9e1 !important;
+}
+
+.nav-item.active .nav-link {
+  color: #3ff8f8 !important;
+}
+
+/* Right-side Search and Icons */
+.right-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: 20px;
+}
+
+.search-input {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 0.9rem;
+}
+
+.icon {
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #fff;
+  transition: color 0.3s ease;
+}
+
+.icon:hover {
+  color: #47e9e1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .navbar-nav {
-    margin-left: auto;
+    background-color: #1565c0;
+    padding: 10px;
+    border-radius: 5px;
   }
-  
+
   .nav-item {
-    margin: 0 10px;
+    margin: 5px 0;
   }
-  
-  .nav-link {
-    color: #fff !important;
-    font-weight: 500;
-    font-size: 1rem;
-    transition: color 0.3s ease;
+
+  .right-icons {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
   }
-  
-  .nav-link:hover {
-    color: #ffeb3b !important;
+
+  .search-input {
+    width: 100%;
   }
-  
-  .nav-item.active .nav-link {
-    color: #ffeb3b !important;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .navbar-nav {
-      background-color: #1565c0;
-      padding: 10px;
-      border-radius: 5px;
-    }
-  
-    .nav-item {
-      margin: 5px 0;
-    }
-  }
-  
+}
