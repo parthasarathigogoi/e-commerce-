@@ -18,7 +18,7 @@ const Header = () => {
                     alt="Logo"
                     className="logo-img"
                   />
-                  E-Commerce Store
+                  Our Dukaan
                 </a>
                 <button
                   className="navbar-toggler"
@@ -31,7 +31,9 @@ const Header = () => {
                 >
                   <span className="navbar-toggler-icon"></span>
                 </button>
+
                 <div className="collapse navbar-collapse" id="navbarNav">
+                  {/* Navigation Links */}
                   <ul className="navbar-nav ml-auto">
                     <li className="nav-item active">
                       <a className="nav-link" href="#">
@@ -54,11 +56,23 @@ const Header = () => {
                       </a>
                     </li>
                   </ul>
-                  {/* Icons Section */}
-                  <div className="icon-container ml-auto">
-                    <SearchIcon className="header-icon" />
-                    <AccountCircleIcon className="header-icon" />
-                    <ShoppingCartIcon className="header-icon" />
+
+                  {/* Icons & Search Section */}
+                  <div className="icon-container ml-auto d-flex align-items-center">
+                    <input
+                      type="text"
+                      className="search-bar"
+                      placeholder="Search for products..."
+                    />
+                    <button className="icon-button" aria-label="Search">
+                      <SearchIcon className="header-icon" />
+                    </button>
+                    <button className="icon-button" aria-label="Account">
+                      <AccountCircleIcon className="header-icon" />
+                    </button>
+                    <button className="icon-button" aria-label="Cart">
+                      <ShoppingCartIcon className="header-icon" />
+                    </button>
                   </div>
                 </div>
               </nav>
@@ -71,3 +85,4 @@ const Header = () => {
 };
 
 export default Header;
+

@@ -1,17 +1,22 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// Import Bootstrap and global styles
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// Import Layout Components
 import Header from './components/header/header';
 import Footer from './components/footer/footer';
-import Body from './components/body/body';
 
-// // Importing individual category pages (Create these components)
-import Groceries from './pages/Groceries';
-import Mobile from './pages/Mobile';
-import Electronics from './pages/Electronics';
-import Furniture from './pages/Furniture';
-import Beauty from './pages/Beauty';
-import Fashion from './pages/Fashion';
+// Import Pages
+import Body from './components/body/body';
+import Groceries from './productlist/Groceries';
+import Mobile from './productlist/Mobile';
+import Electronics from './productlist/Electronics';
+import Furniture from './productlist/Furniture';
+import Beauty from './productlist/Beauty';
+import Fashion from './productlist/Fashion';
 
 function App() {
   return (
