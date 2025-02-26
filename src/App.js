@@ -5,8 +5,12 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // Components
 import Header from './components/header/header';
 import Footer from './components/footer/footer';
-import Body from './components/body/body';
-
+// import Body from './components/body/body';
+//pages
+import Home from './components/pages/Home'
+import Products from './components/pages/Products'
+import Services from './components/pages/Services'
+import ContactUs from './components/pages/ContactUs'
 // Category Pages
 import Groceries from './productlist/Groceries';
 import Mobile from './productlist/Mobile';
@@ -24,7 +28,12 @@ function App() {
       <Header />
       <main className="main-content">
         <Routes>
-          <Route path="/" element={<Body />} />
+          <Route path="/" exact={true} element={<Home/>} />
+          <Route path="/products" exact={true} element={<Products/>} />
+          <Route path="/services" exact={true} element={<Services/>} />
+          <Route path="/contact" exact={true} element={<ContactUs/>} />
+
+          {/* <Route path="/body" element={<Body />} /> */}
           <Route path="/groceries" element={<Groceries />} />
           <Route path="/mobile" element={<Mobile />} />
           <Route path="/electronics" element={<Electronics />} />
