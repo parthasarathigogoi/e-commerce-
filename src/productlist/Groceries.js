@@ -7,9 +7,9 @@ const groceries = [
   { name: 'Fortune Basmati Rice', price: '₹120/kg', image: '/images/rice.jpg' },
   { name: 'Aashirvaad Atta', price: '₹240/5kg', image: '/images/flour.jpg' },
   { name: 'Tata Salt', price: '₹20/kg', image: '/images/salt.jpg' },
-  { name: 'Amul Butter', price: '₹55/100g', image: '/images/butter.jpg' },
-  { name: 'Nestle Milk', price: '₹60/litre', image: '/images/milk.jpg' },
-  { name: 'Patanjali Honey', price: '₹199/500g', image: '/images/honey.jpg' },
+  { name: 'Amul Butter', price: '₹55/100g', image: '/images/butter.jpeg' },
+  { name: 'Nestle Milk', price: '₹60/litre', image: '/images/milk.png' },
+  { name: 'Patanjali Honey', price: '₹199/500g', image: '/images/honey.jpeg' },
 ];
 
 const Groceries = () => {
