@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Panel (Login Info) -->
+        <div class="info-panel">
+            <h2>Haven't connected with us?</h2>
+            <p>Sign up now to get started.</p>
+            <button class="switch-btn" id="signUpBtn">Sign Up</button>
+        </div>
+
+        <!-- Login/Register Box -->
+        <div class="auth-box">
+            <!-- Login Form (Default View) -->
+            <div id="loginForm">
+                <h2>Welcome Back!</h2>
+                <p>Please log in with your credentials.</p>
+                <form action="login.php" method="POST">
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <button type="submit">Log In</button>
+                </form>
+            </div>
+
+            <!-- Register Form (Initially Hidden) -->
+            <div id="registerForm" style="display: none;">
+                <h2>Create Account</h2>
+                <p>Enter your details below.</p>
+                <form action="register.php" method="POST">
+                    <input type="text" name="name" placeholder="Name" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <button type="submit">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle between login and register
+        document.getElementById("signUpBtn").addEventListener("click", function() {
+            document.getElementById("loginForm").style.display = "none";
+            document.getElementById("registerForm").style.display = "block";
+        });
+    </script>
+</body>
+</html>
