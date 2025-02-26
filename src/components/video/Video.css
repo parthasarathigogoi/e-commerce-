@@ -1,0 +1,35 @@
+.video-container {
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  .video-container iframe {
+    border-radius: 10px;
+    max-width: 90%;
+  }
+  
+  /* Advertisement Section */
+  .advertisements {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  
+  .advertisements a {
+    width: 45%; /* Adjust width to fit two large ads in a row */
+  }
+  
+  .advertisements img {
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .advertisements img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  

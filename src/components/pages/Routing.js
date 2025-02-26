@@ -1,25 +1,25 @@
-import React from 'react'
-import { BrowserRouter,Routes, Route } from 'react-router-dom';
-//pages
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// Pages
 import Home from './Home';
 import Products from './Products';
 import Services from './Services';
 import ContactUs from './ContactUs';
+import Groceries from './productlist/Groceries'; // Added Groceries page
 
 function Routing() {
   return (
-    <>
-    <BrowserRouter>
+    <Router>
       <Routes>
-        <Route path="/" exact={true} element={<Home/>} />
-        <Route path="/products" exact={true} element={<Products/>} />
-        <Route path="/services" exact={true} element={<Services/>} />
-        <Route path="/contact" exact={true} element={<ContactUs/>} />
+        <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/contact" element={<ContactUs />} />
+        <Route path="/products/groceries" element={<Groceries />} /> {/* New Route */}
       </Routes>
-    </BrowserRouter>
-     
-    </>
-  )
+    </Router>
+  );
 }
 
-export default Routing
+export default Routing;

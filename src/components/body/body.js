@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './body.css';
+import ProductVideo from '../video/ProductVideo';
 
+// Categories
 const categories = [
   { name: 'Groceries', image: '/images/grocery.jpg', link: '/category/groceries' },
   { name: 'Mobile', image: '/images/mobile.jpg', link: '/category/mobile' },
@@ -11,8 +13,26 @@ const categories = [
   { name: 'Fashion', image: '/images/fashions.jpeg', link: '/category/fashion' },
 ];
 
+// Suggested products section
+const suggestedProducts = [
+  {
+    name: 'iPhone 15 Pro',
+    image: 'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch_AV1?wid=1200&hei=630&fmt=jpeg&qlt=95&.v=1692734591452',
+    price: '$999',
+  },
+  {
+    name: 'Samsung Galaxy S24 Ultra',
+    image: 'https://images.samsung.com/is/image/samsung/assets/in/smartphones/galaxy-s24-ultra/images/galaxy-s24-ultra-highlights-kv.jpg',
+    price: '$1199',
+  },
+  {
+    name: 'Google Pixel 8 Pro',
+    image: 'https://store.google.com/us/product/pixel_8_pro_images/pixel8pro.png',
+    price: '$899',
+  },
+];
+
 const Body = () => {
-  // Splitting categories into rows of three
   const rows = [];
   for (let i = 0; i < categories.length; i += 3) {
     rows.push(categories.slice(i, i + 3));
@@ -30,6 +50,21 @@ const Body = () => {
                 <h3 className="category-name">{category.name}</h3>
               </Link>
             ))}
+          </div>
+        ))}
+      </div>
+
+      {/* Video Section */}
+      <ProductVideo />
+
+      {/* Suggested for You */}
+      <h2 className="section-title">Suggested for You</h2>
+      <div className="suggested-products">
+        {suggestedProducts.map((product, index) => (
+          <div key={index} className="product-card">
+            <img src={product.image} alt={product.name} className="product-image" />
+            <h3 className="product-name">{product.name}</h3>
+            <p className="product-price">{product.price}</p>
           </div>
         ))}
       </div>
