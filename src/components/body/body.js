@@ -6,7 +6,7 @@ import ProductVideo from '../video/ProductVideo';
 // Categories
 const categories = [
   { name: 'Groceries', image: '/images/grocery.jpg', link: '/category/groceries' },
-  { name: 'Mobile', image: '/images/mobile.jpg', link: '/category/mobile' },
+  { name: 'Mobile', image: '/images/mobile.jpg', link: '/category/mobile'},
   { name: 'Electronics', image: '/images/electronics.jpg', link: '/category/electronics' },
   { name: 'Furniture', image: '/images/furniture.png', link: '/category/furniture' },
   { name: 'Beauty', image: '/images/beauty.jpg', link: '/category/beauty' },
@@ -17,7 +17,7 @@ const categories = [
 const suggestedProducts = [
   {
     name: 'iPhone 15 Pro',
-    image: 'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch_AV1?wid=1200&hei=630&fmt=jpeg&qlt=95&.v=1692734591452',
+    image: 'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-src/productlist/Mobile.jspro-finish-select-202309-6-7inch_AV1?wid=1200&hei=630&fmt=jpeg&qlt=95&.v=1692734591452',
     price: '$999',
   },
   {
@@ -49,9 +49,9 @@ const Body = () => {
                 <img src={category.image} alt={category.name} className="category-image" />
                 <h3 className="category-name">{category.name}</h3>
               </Link>
-            ))}
-          </div>
         ))}
+          </div>
+    ))}
       </div>
 
       {/* Video Section */}

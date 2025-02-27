@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import './categoryPage.css';
+import './productCSS/categoryPage.css';
 
 const categoryData = {
   groceries: [
