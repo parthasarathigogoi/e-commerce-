@@ -5,12 +5,12 @@ import ProductVideo from '../video/ProductVideo';
 
 // Categories
 const categories = [
-  { name: 'Groceries', image: '/images/grocery.jpg', link: '/category/groceries' },
-  { name: 'Mobile', image: '/images/mobile.jpg', link: '/category/mobile'},
-  { name: 'Electronics', image: '/images/electronics.jpg', link: '/category/electronics' },
-  { name: 'Furniture', image: '/images/furniture.png', link: '/category/furniture' },
-  { name: 'Beauty', image: '/images/beauty.jpg', link: '/category/beauty' },
-  { name: 'Fashion', image: '/images/fashions.jpeg', link: '/category/fashion' },
+  { name: 'Groceries', image: '/images/grocery.jpg', link: '/groceries' },
+  { name: 'Mobile', image: '/images/mobile.jpg', link: '/mobile'},
+  { name: 'Electronics', image: '/images/electronics.jpg', link: '/electronics' },
+  { name: 'Furniture', image: '/images/furniture.png', link: '/furniture' },
+  { name: 'Beauty', image: '/images/beauty.jpg', link: '/beauty' },
+  { name: 'Fashion', image: '/images/fashions.jpeg', link: '/fashion' },
 ];
 
 // Suggested products section
