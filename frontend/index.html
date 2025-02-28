@@ -10,8 +10,8 @@
     <div class="container">
         <!-- Left Panel (Login Info) -->
         <div class="info-panel">
-            <h2>Haven't connected with us?</h2>
-            <p>Sign up now to get started.</p>
+            <h2 id="left-h2text">Haven't connected with us?</h2>
+            <p id="left-ptext">Sign up now to get started.</p>
             <button class="switch-btn" id="signUpBtn">Sign Up</button>
         </div>
 
@@ -44,6 +44,8 @@
 
     <script>
         // Toggle between login and register
+        let lefth2Text = document.getElementById("left-h2text")
+        let leftpText = document.getElementById("left-ptext")
         let signup = document.getElementById("signUpBtn")
        let logform = document.getElementById("loginForm")
        let regform = document.getElementById("registerForm")
