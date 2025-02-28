@@ -30,6 +30,12 @@ const suggestedProducts = [
     image: 'https://store.google.com/us/product/pixel_8_pro_images/pixel8pro.png',
     price: '$899',
   },
+  { id: 1, name: "Rice (1kg)", price: "₹50", image: "/images/rice.jpg" },
+  { id: 2, name: "Wheat Flour (1kg)", price: "₹45", image: "/images/flour.jpg" },
+  { id: 3, name: "Salt (1kg)", price: "₹40", image: "/images/salt.jpg" },
+  { id: 4, name: "Milk (1L)", price: "₹60", image: "/images/milk.png" },
+  { id: 5, name: "Honey (1L)", price: "₹180", image: "/images/honey.jpeg" },
+  { id: 6, name: "Butter (500g)", price: "₹120", image: "/images/butter.jpeg" },
 ];
 
 const Body = () => {
