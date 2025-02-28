@@ -44,9 +44,24 @@
 
     <script>
         // Toggle between login and register
-        document.getElementById("signUpBtn").addEventListener("click", function() {
-            document.getElementById("loginForm").style.display = "none";
-            document.getElementById("registerForm").style.display = "block";
+        let signup = document.getElementById("signUpBtn")
+       let logform = document.getElementById("loginForm")
+       let regform = document.getElementById("registerForm")
+
+       signup.addEventListener("click", function() {
+        if(signup.textContent=="Sign Up"){
+            logform.style.display = "none";
+            regform.style.display = "block";
+            signup.textContent = "Log In";
+            lefth2Text.textContent = "Already Signed Up?";
+            leftpText.textContent = "Simply Log In.";
+        }else if(signup.textContent=="Log In"){
+            regform.style.display = "none";
+            logform.style.display = "block";
+            signup.textContent = "Sign Up";
+            lefth2Text.textContent = "Haven't connected with us?";
+            leftpText.textContent = "Sign up now to get started.";
+        }
         });
     </script>
 </body>
