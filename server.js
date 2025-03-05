@@ -6,10 +6,7 @@ const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("./backend/models/User"); // Import User Model
-
-const adminRoutes = require("./backend/routes/adminroutes");
-
-// Import Admin Routes
+const adminRoutes = require("./backend/routes/adminroutes"); // Import Admin Routes
 
 const app = express();
 const server = http.createServer(app);
@@ -79,7 +76,7 @@ app.post("/api/login", async (req, res) => {
       expiresIn: "1h", // Token expires in 1 hour
     });
 
-    res.status(200).json({ message: "✅ Login Successful!", token });
+    res.status(200).json({ message: "✅ Login Successful!", token, userId: user._id });
   } catch (error) {
     res.status(500).json({ message: "❌ Server error", error });
   }
