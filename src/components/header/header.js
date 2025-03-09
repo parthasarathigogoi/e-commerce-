@@ -6,6 +6,10 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const Header = () => {
+  let cartIcon = document.getElementById("icon-button")
+  cartIcon.addEventListener("click",()=>{
+    console.log("Button clicked")
+  })
   return (
     <header>
       <div className="container-fluid">
@@ -61,13 +65,13 @@ const Header = () => {
                       className="search-bar"
                       placeholder="Search for products..."
                     />
-                    <button className="icon-button" aria-label="Search">
+                    <button id="icon-button" aria-label="Search">
                       <SearchIcon className="header-icon" />
                     </button>
-                    <button className="icon-button" aria-label="Account">
+                    <button id="icon-button" aria-label="Account">
                       <AccountCircleIcon className="header-icon" />
                     </button>
-                    <button className="icon-button" aria-label="Cart">
+                    <button id="icon-button" aria-label="Cart">
                       <ShoppingCartIcon className="header-icon" />
                     </button>
                   </div>

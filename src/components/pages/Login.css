@@ -16,6 +16,8 @@ body {
 
 /* Main Container */
 .container {
+    margin: 0;
+    padding: 0;
     display: flex;
     width: 750px; /* Made smaller */
     height: 450px; /* Reduced size */
