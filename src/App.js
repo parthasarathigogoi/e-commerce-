@@ -15,7 +15,7 @@ function App() {
   return (
     <Router>
       {/* Show Header and Footer only if the user is logged in */}
-      {isAuthenticated && <Header />}
+      {isAuthenticated && <Header/>}
       
       <Routes>
         {/* Redirect to login if not authenticated */}
