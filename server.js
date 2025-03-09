@@ -17,12 +17,13 @@ app.use(cors()); // Enable CORS
 // MongoDB Connection
 const mongoURI = process.env.MONGO_URI;
 
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log("✅ MongoDB Connected Successfully"))
-.catch(err => console.error("❌ MongoDB Connection Error:", err));
+mongoose
+  .connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("✅ MongoDB Connected Successfully"))
+  .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
 // Basic Route
 app.get("/", (req, res) => {
@@ -44,8 +45,11 @@ app.post("/api/register", async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // Check if the registered email is the admin
+    const isAdmin = email === process.env.ADMIN_EMAIL;
+
     // Save new user
-    const newUser = new User({ name, email, password: hashedPassword });
+    const newUser = new User({ name, email, password: hashedPassword, isAdmin });
     await newUser.save();
 
     res.status(201).json({ message: "✅ User registered successfully!" });
@@ -71,19 +75,44 @@ app.post("/api/login", async (req, res) => {
       return res.status(400).json({ message: "❌ Invalid Email or Password!" });
     }
 
+    // Check if user is admin
+    const isAdmin = email === process.env.ADMIN_EMAIL;
+
     // Generate JWT Token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user._id, isAdmin }, process.env.JWT_SECRET, {
       expiresIn: "1h", // Token expires in 1 hour
     });
 
-    res.status(200).json({ message: "✅ Login Successful!", token, userId: user._id });
+    res.status(200).json({ 
+      message: "✅ Login Successful!", 
+      token, 
+      userId: user._id, 
+      isAdmin, 
+      redirectTo: "/home" // Redirecting to home page after successful login
+    });
   } catch (error) {
     res.status(500).json({ message: "❌ Server error", error });
   }
 });
 
-// Admin Routes
-app.use("/api/admin", adminRoutes);
+// Middleware to check if user is admin
+const verifyAdmin = (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1]; // Get token from headers
+    if (!token) return res.status(403).json({ message: "❌ Unauthorized" });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded.isAdmin) return res.status(403).json({ message: "❌ Access Denied" });
+
+    req.user = decoded;
+    next();
+  } catch (error) {
+    res.status(403).json({ message: "❌ Invalid Token" });
+  }
+};
+
+// Protected Admin Route
+app.use("/api/admin", verifyAdmin, adminRoutes);
 
 // Start Server
 const PORT = process.env.PORT || 3000;

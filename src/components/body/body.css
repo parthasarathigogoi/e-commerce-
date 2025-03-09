@@ -21,8 +21,8 @@
 
 .category-row {
   display: flex;
-  justify-content: space-between;
-  gap: 10px;
+  justify-content: center;
+  gap: 15px;
   flex-wrap: wrap;
 }
 
@@ -30,7 +30,8 @@
 .category-card {
   background-color: #fff;
   border-radius: 5px;
-  width: 20%;
+  flex-basis: calc(20% - 10px); /* Flexible width */
+  max-width: 160px; /* Prevents cards from being too large */
   height: 120px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   text-decoration: none;
@@ -69,14 +70,15 @@
 .suggested-products {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center; /* Ensures even alignment */
   gap: 15px;
 }
 
 .product-card {
   background-color: #fff;
   border-radius: 10px;
-  width: 23%;
+  flex-basis: calc(23% - 10px); /* Flexible width */
+  max-width: 220px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   padding: 15px;
   text-align: center;
@@ -115,18 +117,22 @@
     justify-content: center;
   }
 
-  .category-card, .product-card {
-    width: 45%;
+  .category-card {
+    flex-basis: calc(33% - 10px); /* Adjust for tablet view */
+  }
+
+  .product-card {
+    flex-basis: calc(45% - 10px); /* Adjust product size for tablets */
   }
 }
 
 @media (max-width: 480px) {
   .category-card {
-    width: 90px;
-    height: 90px;
+    flex-basis: calc(50% - 10px); /* 2 per row on mobile */
+    height: 100px;
   }
-  
+
   .product-card {
-    width: 100%;
+    flex-basis: 100%; /* Full width on small screens */
   }
 }
