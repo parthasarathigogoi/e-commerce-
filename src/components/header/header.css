@@ -1,114 +1,47 @@
-/* Logo Styling */
+/* Ensure header takes full width */
+.header {
+  width: 100%;
+  background-color: #f8f9fa; /* Light gray */
+  padding: 10px 0;
+  position: relative;
+  z-index: 1000;
+}
+
+/* Ensure navbar spacing */
+.navbar {
+  padding: 0.5rem 1rem;
+}
+
+/* Fix logo */
 .logo-img {
   height: 40px;
-  width: auto;
-  margin-right: 10px;
-  border-radius: 5px;
+  margin-right: 8px;
 }
 
-/* Header Styling */
-header {
-  background-color: #2874f0;
-  padding: 10px 0;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.navbar {
-  padding: 0.8rem 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.navbar-brand {
-  display: flex;
-  align-items: center;
-  font-size: 1.8rem;
+.brand-text {
+  font-size: 1.5rem;
   font-weight: bold;
-  color: #6cdfdf;
-  text-transform: uppercase;
+  color: #333;
 }
 
-.navbar-toggler {
-  border: none;
-  outline: none;
+/* Search bar and icons */
+.icon-container {
+  gap: 10px;
 }
 
-.navbar-toggler-icon {
-  background-color: #161414;
-}
-
-.navbar-nav {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-}
-
-.nav-item {
-  margin: 0 10px;
-}
-
-.nav-link {
-  color: #42f2f8 !important;
-  font-weight: 500;
-  font-size: 1rem;
-  transition: color 0.3s ease;
-}
-
-.nav-link:hover {
-  color: #47e9e1 !important;
-}
-
-.nav-item.active .nav-link {
-  color: #3ff8f8 !important;
-}
-
-/* Right-side Search and Icons */
-.right-icons {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-left: 20px;
-}
-
-.search-input {
-  padding: 5px 10px;
-  border-radius: 5px;
+.search-bar {
+  padding: 5px;
   border: 1px solid #ccc;
-  outline: none;
-  font-size: 0.9rem;
+  border-radius: 5px;
 }
 
-.icon {
-  font-size: 1.8rem;
+.icon-button {
+  background: none;
+  border: none;
   cursor: pointer;
-  color: #fff;
-  transition: color 0.3s ease;
 }
 
-.icon:hover {
-  color: #47e9e1;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .navbar-nav {
-    background-color: #1565c0;
-    padding: 10px;
-    border-radius: 5px;
-  }
-
-  .nav-item {
-    margin: 5px 0;
-  }
-
-  .right-icons {
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  .search-input {
-    width: 100%;
-  }
+.header-icon {
+  font-size: 24px;
+  color: #333;
 }
