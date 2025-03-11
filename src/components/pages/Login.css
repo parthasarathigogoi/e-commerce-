@@ -3,15 +3,15 @@
     padding: 0;
     box-sizing: border-box;
     font-family: Arial, sans-serif;
+    /* background: url('/frontend/IMG_2974.PNG') no-repeat center center/cover; */
 }
 
-body {
+.body-cont {
     display: flex;
-    justify-content: flex-end; /* Pushes everything to the right */
+    margin: 200px 100px 0px 0px;
+    justify-content: flex-end; /*Pushes everything to the right*/
     align-items: center;
-    height: 100vh;
-    background: url('/frontend/IMG_2974.PNG') no-repeat center center/cover;
-    padding-right: 80px; /* Adjust to move more to the right */
+
 }
 
 /* Main Container */
