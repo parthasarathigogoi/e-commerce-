@@ -10,4 +10,27 @@
     height: auto;
     aspect-ratio: 16 / 9;
   }
+
+  /* Ensure full height layout */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* App container */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Full height of viewport */
+}
+
+/* Main content should expand to fill remaining space */
+.main-content {
+  flex: 1; /* This pushes the footer down */
+  padding-bottom: 20px; /* Avoids content overlapping the footer */
+}
+
   
