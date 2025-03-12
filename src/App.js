@@ -11,13 +11,13 @@ import ProdRouting from "./AllRouting/ProdRouting";
 import Login from "./components/pages/Login"; // Import Login Page
 
 function App() {
-  // State to track authentication status
-  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("authToken"));
+  // Track authentication status
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
 
-  // Listen for changes in localStorage
+  // Listen for auth changes
   useEffect(() => {
     const checkAuth = () => {
-      setIsAuthenticated(!!localStorage.getItem("authToken"));
+      setIsAuthenticated(!!localStorage.getItem("token"));
     };
     window.addEventListener("storage", checkAuth);
     return () => window.removeEventListener("storage", checkAuth);
@@ -25,26 +25,27 @@ function App() {
 
   return (
     <Router>
-      {/* Show Header and Footer only if the user is logged in */}
-      {isAuthenticated && <Header />}
-
       <Routes>
-        {/* Redirect to login if not authenticated */}
-        <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-        <Route
-          path="/*"
-          element={isAuthenticated ? (
-            <>
-              <HeadRouting />
-              <ProdRouting />
-            </>
-          ) : (
-            <Navigate to="/login" replace />
-          )}
-        />
-      </Routes>
+        {/* Show Login Page First If Not Authenticated */}
+        {!isAuthenticated ? (
+          <Route path="*" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+        ) : (
+          <>
+            {/* Header & Footer only for authenticated users */}
+            <Route path="/*" element={
+              <>
+                <Header />
+                <HeadRouting />
+                <ProdRouting />
+                <Footer />
+              </>
+            } />
+          </>
+        )}
 
-      {isAuthenticated && <Footer />}
+        {/* Catch-all: Redirect unknown routes */}
+        <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/login"} />} />
+      </Routes>
     </Router>
   );
 }
