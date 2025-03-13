@@ -1,9 +1,11 @@
 import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaTimes, FaUser } from 'react-icons/fa';
 import { AuthContext } from '../../App';
 import './AuthModal.css';
 
 const AuthModal = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -57,6 +59,10 @@ const AuthModal = ({ isOpen, onClose }) => {
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       if (isLogin) {
+        // Log out seller if logged in
+        localStorage.removeItem('sellerToken');
+        localStorage.removeItem('sellerData');
+        
         // Simulate successful login
         localStorage.setItem('token', 'demo-token');
         localStorage.setItem('userId', 'demo-user');
@@ -64,6 +70,8 @@ const AuthModal = ({ isOpen, onClose }) => {
         setUser({ id: 'demo-user' });
         onClose();
         resetForm();
+        // Redirect to homepage
+        navigate('/');
       } else {
         // Simulate successful registration
         setIsLogin(true);
@@ -86,6 +94,10 @@ const AuthModal = ({ isOpen, onClose }) => {
   const handleDemoLogin = () => {
     setLoading(true);
     setTimeout(() => {
+      // Log out seller if logged in
+      localStorage.removeItem('sellerToken');
+      localStorage.removeItem('sellerData');
+      
       localStorage.setItem('token', 'demo-token');
       localStorage.setItem('userId', 'demo-user');
       setIsAuthenticated(true);
@@ -93,6 +105,8 @@ const AuthModal = ({ isOpen, onClose }) => {
       onClose();
       resetForm();
       setLoading(false);
+      // Redirect to homepage
+      navigate('/');
     }, 1000);
   };
 

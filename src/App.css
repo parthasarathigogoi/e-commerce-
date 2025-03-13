@@ -52,6 +52,7 @@ html, body, #root {
 .main-content {
   flex: 1; /* This pushes the footer down */
   padding-bottom: 20px; /* Avoids content overlapping the footer */
+  padding-top: 80px; /* Prevents content from being hidden behind the fixed header */
   position: relative;
 }
 

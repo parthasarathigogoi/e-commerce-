@@ -80,21 +80,23 @@
 // export default Header;
 
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './header.css';
-import { FaSearch, FaShoppingCart, FaUser, FaBars, FaTimes } from 'react-icons/fa';
+import { FaSearch, FaShoppingCart, FaUser, FaCrown, FaStore } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { AuthContext } from '../../App';
+import { useSeller } from '../../context/SellerContext';
 import ProfileDropdown from './ProfileDropdown';
 
-const Header = ({ onCartClick, onAuthClick }) => {
+const Header = ({ onCartClick, onAuthClick, onSellerAuthClick }) => {
+  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchActive, setSearchActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const { getCartCount } = useCart();
   const { isAuthenticated } = useContext(AuthContext);
+  const { isSellerAuthenticated } = useSeller();
 
   // Handle scroll event to change header style
   useEffect(() => {
@@ -121,11 +123,6 @@ const Header = ({ onCartClick, onAuthClick }) => {
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
   }, [isProfileDropdownOpen]);
-
-  // Toggle mobile menu
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
 
   // Toggle search bar
   const toggleSearch = () => {
@@ -158,42 +155,60 @@ const Header = ({ onCartClick, onAuthClick }) => {
     }
   };
 
+  // Handle seller button click
+  const handleSellerClick = (e) => {
+    e.stopPropagation();
+    if (isSellerAuthenticated) {
+      // Use React Router navigation instead of window.location
+      navigate('/seller/dashboard');
+    } else {
+      onSellerAuthClick();
+    }
+  };
+
   return (
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="header-container">
         {/* Logo */}
         <Link to="/" className="logo">
+          <div className="logo-icon">
+            <FaCrown className="crown-icon" />
+          </div>
           <span className="logo-text">
-            <span className="logo-elegant">ELEGANCE</span>
+            <span className="logo-elegant">DIKHOW</span>
           </span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className={`nav-menu ${isMobileMenuOpen ? 'active' : ''}`}>
-          <button className="close-menu" onClick={toggleMobileMenu}>
-            <FaTimes />
-          </button>
+        <nav className="nav-menu">
           <ul className="nav-list">
             <li className="nav-item">
-              <Link to="/" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>
+              <Link to="/" className="nav-link">
                 Home
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/shop" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>
+              <Link to="/shop" className="nav-link">
                 Shop
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/categories" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>
+              <Link to="/categories" className="nav-link">
                 Categories
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/contact" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>
+              <Link to="/contact" className="nav-link">
                 Contact
               </Link>
             </li>
+            {isSellerAuthenticated && (
+              <li className="nav-item">
+                <Link to="/seller/dashboard" className="nav-link">
+                  Seller Dashboard
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
 
@@ -207,7 +222,7 @@ const Header = ({ onCartClick, onAuthClick }) => {
             <form className="search-form" onSubmit={handleSearchSubmit}>
               <input
                 type="text"
-                placeholder="Search for products..."
+                placeholder="Search for premium products..."
                 className="search-input"
                 value={searchQuery}
                 onChange={handleSearchChange}
@@ -217,6 +232,15 @@ const Header = ({ onCartClick, onAuthClick }) => {
               </button>
             </form>
           </div>
+
+          {/* Seller Button */}
+          <button 
+            className={`action-button seller-button ${isSellerAuthenticated ? 'seller-active' : ''}`}
+            onClick={handleSellerClick}
+            title={isSellerAuthenticated ? 'Seller Dashboard' : 'Become a Seller'}
+          >
+            <FaStore />
+          </button>
 
           {/* User Profile / Auth */}
           <div className="profile-section" style={{ position: 'relative' }}>
@@ -241,18 +265,8 @@ const Header = ({ onCartClick, onAuthClick }) => {
             <FaShoppingCart />
             <span className="cart-badge">{getCartCount()}</span>
           </button>
-
-          {/* Mobile Menu Toggle */}
-          <button className="mobile-menu-toggle" onClick={toggleMobileMenu}>
-            <FaBars />
-          </button>
         </div>
       </div>
-
-      {/* Mobile Menu Overlay */}
-      {isMobileMenuOpen && (
-        <div className="menu-overlay" onClick={toggleMobileMenu}></div>
-      )}
     </header>
   );
 };

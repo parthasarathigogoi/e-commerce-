@@ -1,7 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './footer.css';
-import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
+import { 
+  FaFacebookF, 
+  FaTwitter, 
+  FaInstagram, 
+  FaLinkedinIn, 
+  FaMapMarkerAlt, 
+  FaPhone, 
+  FaEnvelope, 
+  FaCreditCard, 
+  FaPaypal,
+  FaCcVisa,
+  FaCcMastercard,
+  FaCcAmex,
+  FaCcDiscover,
+  FaCcApplePay
+} from 'react-icons/fa';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -15,7 +30,7 @@ const Footer = () => {
             <div className="footer-column">
               <h3 className="footer-title">ELEGANCE</h3>
               <p className="footer-description">
-                Curating timeless products with sophisticated design and premium quality. Our black and white aesthetic reflects our commitment to elegance and simplicity.
+                Curating timeless products with sophisticated design and premium quality. Our aesthetic reflects our commitment to elegance and simplicity.
               </p>
               <div className="footer-social">
                 <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon">
@@ -85,10 +100,11 @@ const Footer = () => {
             © {currentYear} ELEGANCE. All rights reserved.
           </p>
           <div className="payment-methods">
-            <img src="https://cdn-icons-png.flaticon.com/512/196/196578.png" alt="Visa" className="payment-icon" />
-            <img src="https://cdn-icons-png.flaticon.com/512/196/196561.png" alt="MasterCard" className="payment-icon" />
-            <img src="https://cdn-icons-png.flaticon.com/512/196/196565.png" alt="PayPal" className="payment-icon" />
-            <img src="https://cdn-icons-png.flaticon.com/512/196/196539.png" alt="American Express" className="payment-icon" />
+            <FaCcVisa className="payment-icon" title="Visa" />
+            <FaCcMastercard className="payment-icon" title="MasterCard" />
+            <FaCcAmex className="payment-icon" title="American Express" />
+            <FaPaypal className="payment-icon" title="PayPal" />
+            <FaCcApplePay className="payment-icon" title="Apple Pay" />
           </div>
         </div>
       </div>

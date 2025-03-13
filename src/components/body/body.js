@@ -4,122 +4,100 @@ import './body.css';
 import ProductVideo from '../video/ProductVideo';
 import { useCart } from '../../context/CartContext';
 import { FaShoppingCart, FaHeart, FaEye } from 'react-icons/fa';
+import StickyOfferBar from '../offers/StickyOfferBar';
+import SpecialOffers from '../offers/SpecialOffers';
+import ProductCard from '../ProductCard';
 
-// Categories with black and white theme
+// Premium categories with black and white theme
 const categories = [
-  { name: 'Groceries', image: '/images/grocery.jpg', link: '/groceries', color: '#000000' },
-  { name: 'Mobile', image: '/images/mobile.jpg', link: '/mobile', color: '#222222' },
-  { name: 'Electronics', image: '/images/electronics.jpg', link: '/electronics', color: '#333333' },
-  { name: 'Furniture', image: '/images/furniture.png', link: '/furniture', color: '#444444' },
-  { name: 'Beauty', image: '/images/beauty.jpg', link: '/beauty', color: '#555555' },
-  { name: 'Fashion', image: '/images/fashions.jpeg', link: '/fashion', color: '#666666' },
+  { name: 'Watches', image: '/images/electronics.jpg', link: '/shop?category=Watches', color: '#000000' },
+  { name: 'Clothes', image: '/images/fashions.jpeg', link: '/shop?category=Clothes', color: '#222222' },
+  { name: 'Shoes', image: '/images/mobile.jpg', link: '/shop?category=Shoes', color: '#333333' },
+  { name: 'Belts', image: '/images/furniture.png', link: '/shop?category=Belts', color: '#444444' },
+  { name: 'Perfumes', image: '/images/beauty.jpg', link: '/shop?category=Perfumes', color: '#555555' },
+  { name: 'Accessories', image: '/images/fashions.jpeg', link: '/shop?category=Accessories', color: '#666666' },
 ];
 
-// Expanded product list
-const suggestedProducts = [
+// Premium featured products
+const featuredProducts = [
   {
     id: 1,
-    name: 'iPhone 15 Pro',
-    image: 'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-src/productlist/Mobile.jspro-finish-select-202309-6-7inch_AV1?wid=1200&hei=630&fmt=jpeg&qlt=95&.v=1692734591452',
-    price: '$999',
-    rating: 4.8,
-    reviews: 245,
-    isNew: true
+    name: 'Swiss Automatic Watch',
+    image: '/images/electronics.jpg',
+    price: 2499.99,
+    rating: 4.9,
+    reviews: 87,
+    isNew: true,
+    category: 'Watches'
   },
   {
     id: 2,
-    name: 'Samsung Galaxy S24 Ultra',
-    image: 'https://images.samsung.com/is/image/samsung/assets/in/smartphones/galaxy-s24-ultra/images/galaxy-s24-ultra-highlights-kv.jpg',
-    price: '$1199',
+    name: 'Italian Silk Tie',
+    image: '/images/fashions.jpeg',
+    price: 129.99,
     rating: 4.7,
-    reviews: 189
+    reviews: 48,
+    category: 'Accessories'
   },
   {
     id: 3,
-    name: 'Google Pixel 8 Pro',
-    image: 'https://store.google.com/us/product/pixel_8_pro_images/pixel8pro.png',
-    price: '$899',
-    rating: 4.6,
-    reviews: 156
+    name: 'Handcrafted Leather Belt',
+    image: '/images/furniture.png',
+    price: 249.99,
+    rating: 4.8,
+    reviews: 65,
+    category: 'Belts'
   },
-  { 
-    id: 4, 
-    name: "Rice (1kg)", 
-    price: "₹50", 
-    image: "/images/rice.jpg",
-    rating: 4.5,
-    reviews: 120
-  },
-  { 
-    id: 5, 
-    name: "Wheat Flour (1kg)", 
-    price: "₹45", 
-    image: "/images/flour.jpg",
-    rating: 4.3,
-    reviews: 98
-  },
-  { 
-    id: 6, 
-    name: "Salt (1kg)", 
-    price: "₹40", 
-    image: "/images/salt.jpg",
-    rating: 4.4,
-    reviews: 87
-  },
-  { 
-    id: 7, 
-    name: "Milk (1L)", 
-    price: "₹60", 
-    image: "/images/milk.png",
-    rating: 4.7,
-    reviews: 145
-  },
-  { 
-    id: 8, 
-    name: "Honey (1L)", 
-    price: "₹180", 
-    image: "/images/honey.jpeg",
+  {
+    id: 4,
+    name: 'Designer Wool Coat',
+    image: '/images/fashions.jpeg',
+    price: 899.99,
     rating: 4.9,
-    reviews: 210,
-    isNew: true
+    reviews: 52,
+    isNew: true,
+    category: 'Clothes'
   }
 ];
 
-// New trending products
+// Premium trending products
 const trendingProducts = [
   {
-    id: 9,
-    name: 'Minimalist Watch',
-    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30',
-    price: '$129',
-    rating: 4.9,
-    reviews: 312,
-    isNew: true
-  },
-  {
-    id: 10,
-    name: 'Leather Wallet',
-    image: 'https://images.unsplash.com/photo-1627123424574-724758594e93',
-    price: '$49',
-    rating: 4.7,
-    reviews: 189
-  },
-  {
-    id: 11,
-    name: 'Wireless Earbuds',
-    image: 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb',
-    price: '$89',
-    rating: 4.6,
-    reviews: 256
-  },
-  {
-    id: 12,
-    name: 'Mechanical Keyboard',
-    image: 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef',
-    price: '$149',
+    id: 5,
+    name: 'Luxury Chronograph Watch',
+    image: '/images/electronics.jpg',
+    price: 1299.99,
     rating: 4.8,
-    reviews: 178,
-    isNew: true
+    reviews: 76,
+    category: 'Watches'
+  },
+  {
+    id: 6,
+    name: 'Signature Eau de Parfum',
+    image: '/images/beauty.jpg',
+    price: 189.99,
+    rating: 4.9,
+    reviews: 142,
+    category: 'Perfumes'
+  },
+  {
+    id: 7,
+    name: 'Italian Leather Loafers',
+    image: '/images/mobile.jpg',
+    price: 399.99,
+    rating: 4.8,
+    reviews: 67,
+    isNew: true,
+    category: 'Shoes'
+  },
+  {
+    id: 8,
+    name: 'Cashmere Sweater',
+    image: '/images/fashions.jpeg',
+    price: 349.99,
+    rating: 4.7,
+    reviews: 93,
+    category: 'Clothes'
   }
 ];
 
@@ -127,14 +105,14 @@ const trendingProducts = [
 const testimonials = [
   {
     id: 1,
-    text: "The quality of products I received exceeded my expectations. The black and white aesthetic of the website matches the premium feel of their items.",
+    text: "The quality of the luxury items I purchased exceeded my expectations. The elegant aesthetic of their products matches the premium feel of their brand.",
     name: "Sarah Johnson",
-    role: "Regular Customer",
+    role: "VIP Customer",
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150"
   },
   {
     id: 2,
-    text: "I've been shopping here for years and have never been disappointed. Their customer service is as elegant as their website design.",
+    text: "I've been shopping here for years and have never been disappointed. Their attention to detail and craftsmanship is unmatched.",
     name: "Michael Chen",
     role: "Premium Member",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150"
@@ -143,7 +121,7 @@ const testimonials = [
 
 const Body = () => {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [visibleProducts, setVisibleProducts] = useState(suggestedProducts);
+  const [visibleProducts, setVisibleProducts] = useState(featuredProducts);
   const [isLoading, setIsLoading] = useState(true);
   const { addToCart } = useCart();
 
@@ -158,55 +136,66 @@ const Body = () => {
   // Filter products by category
   const filterProducts = (category) => {
     setActiveCategory(category);
-    // In a real app, you would filter products based on category
-    setVisibleProducts(suggestedProducts);
+    if (category === 'all') {
+      setVisibleProducts(featuredProducts);
+    } else if (category === 'new') {
+      setVisibleProducts(featuredProducts.filter(product => product.isNew));
+    } else {
+      setVisibleProducts(featuredProducts.filter(product => product.category === category));
+    }
   };
 
   const handleAddToCart = (product) => {
     addToCart({
       id: product.id,
       name: product.name,
-      price: parseFloat(product.price.replace(/[^0-9.-]+/g, '')),
+      price: typeof product.price === 'number' ? product.price : parseFloat(product.price.replace(/[^0-9.-]+/g, '')),
       image: product.image
     });
   };
 
   return (
     <div className="body-container">
+      {/* Sticky Offer Bar */}
+      <StickyOfferBar />
+      
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">
-            <span className="elegant-font">Timeless</span> Elegance
+            <span className="elegant-font">Luxury</span> Redefined
           </h1>
-          <p className="hero-subtitle">Discover curated products with sophisticated design and premium quality</p>
+          <p className="hero-subtitle">Discover our exclusive collection of premium products crafted for the discerning customer</p>
           <div className="hero-buttons">
-            <button className="primary-button">Shop Collection</button>
-            <button className="secondary-button">Explore</button>
+            <Link to="/shop" className="primary-button">Shop Collection</Link>
+            <Link to="/categories" className="secondary-button">Explore Categories</Link>
           </div>
         </div>
         <div className="hero-image-container">
           <div className="hero-image-wrapper">
-            <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8" alt="Elegant Shopping" className="hero-image" />
+            <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8" alt="Luxury Shopping" className="hero-image" />
             <div className="hero-shape shape-1"></div>
             <div className="hero-shape shape-2"></div>
           </div>
         </div>
       </section>
 
+      {/* Special Offers Section */}
+      <SpecialOffers />
+
       {/* Featured Products Banner */}
       <section className="featured-banner">
         <div className="banner-content">
-          <h2 className="banner-title">New Arrivals</h2>
-          <p className="banner-subtitle">Explore our latest collection of premium products</p>
-          <button className="banner-button">View All</button>
+          <h2 className="banner-title">Exclusive Collection</h2>
+          <p className="banner-subtitle">Explore our handpicked selection of premium luxury items</p>
+          <Link to="/shop" className="banner-button">View All</Link>
         </div>
       </section>
 
       {/* Categories Section */}
       <section className="categories-section">
-        <h2 className="section-title elegant-font">Shop by Category</h2>
-        <p className="section-subtitle">Explore our curated selection across various categories</p>
+        <h2 className="section-title elegant-font">Premium Categories</h2>
+        <p className="section-subtitle">Explore our curated selection of luxury products</p>
         
         <div className="categories-grid">
           {categories.map((category, index) => (
@@ -227,12 +216,12 @@ const Body = () => {
 
       <div className="elegant-divider"></div>
 
-      {/* Products Section */}
+      {/* Featured Products Section */}
       <section className="products-section">
-        <h2 className="section-title elegant-font">Trending Products</h2>
-        <p className="section-subtitle">Discover what's popular right now</p>
+        <h2 className="section-title elegant-font">Featured Products</h2>
+        <p className="section-subtitle">Discover our selection of premium items</p>
         
-        <div className="product-filter">
+        <div className="filter-buttons">
           <button 
             className={`filter-button ${activeCategory === 'all' ? 'active' : ''}`}
             onClick={() => filterProducts('all')}
@@ -240,132 +229,83 @@ const Body = () => {
             All
           </button>
           <button 
-            className={`filter-button ${activeCategory === 'new' ? 'active' : ''}`}
-            onClick={() => filterProducts('new')}
+            className={`filter-button ${activeCategory === 'Watches' ? 'active' : ''}`}
+            onClick={() => filterProducts('Watches')}
           >
-            New Arrivals
+            Watches
           </button>
           <button 
-            className={`filter-button ${activeCategory === 'popular' ? 'active' : ''}`}
-            onClick={() => filterProducts('popular')}
+            className={`filter-button ${activeCategory === 'Clothes' ? 'active' : ''}`}
+            onClick={() => filterProducts('Clothes')}
           >
-            Popular
+            Clothes
           </button>
           <button 
-            className={`filter-button ${activeCategory === 'sale' ? 'active' : ''}`}
-            onClick={() => filterProducts('sale')}
+            className={`filter-button ${activeCategory === 'Accessories' ? 'active' : ''}`}
+            onClick={() => filterProducts('Accessories')}
           >
-            On Sale
+            Accessories
           </button>
         </div>
         
         <div className="products-grid">
           {isLoading ? (
             // Skeleton loading
-            Array(8).fill().map((_, index) => (
+            Array(4).fill().map((_, index) => (
               <div key={index} className="product-card skeleton">
-                <div className="product-image skeleton-image"></div>
-                <div className="product-details">
-                  <div className="skeleton-text skeleton-title"></div>
-                  <div className="skeleton-text skeleton-price"></div>
-                  <div className="skeleton-text skeleton-rating"></div>
-                </div>
+                <div className="skeleton-image"></div>
+                <div className="skeleton-text skeleton-title"></div>
+                <div className="skeleton-text skeleton-price"></div>
+                <div className="skeleton-text skeleton-rating"></div>
               </div>
             ))
           ) : (
-            visibleProducts.map((product, index) => (
-              <div 
-                key={product.id} 
-                className="product-card animate-fade-in"
-                style={{animationDelay: `${index * 0.1}s`}}
-              >
-                {product.isNew && <span className="new-badge">NEW</span>}
-                <div className="product-image-container">
-                  <img src={product.image} alt={product.name} className="product-image" />
-                  <div className="product-actions">
-                    <button className="action-button wishlist-button">
-                      <FaHeart />
-                    </button>
-                    <button 
-                      className="action-button cart-button"
-                      onClick={() => handleAddToCart(product)}
-                    >
-                      <FaShoppingCart />
-                    </button>
-                    <button className="action-button view-button">
-                      <FaEye />
-                    </button>
-                  </div>
-                </div>
-                <div className="product-details">
-                  <h3 className="product-name">{product.name}</h3>
-                  <p className="product-price">{product.price}</p>
-                  <div className="product-rating">
-                    <span className="stars">{'★'.repeat(Math.floor(product.rating))}{'☆'.repeat(5 - Math.floor(product.rating))}</span>
-                    <span className="reviews">({product.reviews})</span>
-                  </div>
-                </div>
+            visibleProducts.map(product => (
+              <div key={product.id} className="product-grid-item">
+                <ProductCard product={product} />
               </div>
             ))
           )}
         </div>
       </section>
 
-      {/* Video Section - Smaller and centered */}
+      {/* Video Section */}
       <section className="video-section">
-        <h2 className="section-title elegant-font">Our Craftsmanship</h2>
-        <p className="section-subtitle">See the quality and attention to detail in our products</p>
+        <h2 className="section-title elegant-font">Experience Luxury</h2>
+        <p className="section-subtitle">See our craftsmanship in action</p>
         <ProductVideo />
       </section>
 
       {/* Trending Products Section */}
+      <section className="products-section">
+        <h2 className="section-title elegant-font">Trending Now</h2>
+        <p className="section-subtitle">Our most popular premium items</p>
+        
+        <div className="products-grid">
+          {trendingProducts.map(product => (
+            <div key={product.id} className="product-grid-item">
+              <ProductCard product={product} />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Featured Section */}
       <section className="featured-section">
         <div className="container">
-          <h2 className="section-title elegant-font" style={{color: 'white'}}>Premium Selection</h2>
-          <p className="section-subtitle" style={{color: 'rgba(255,255,255,0.7)'}}>Handpicked items for the discerning customer</p>
-          
-          <div className="products-grid">
-            {trendingProducts.map((product, index) => (
-              <div 
-                key={product.id} 
-                className="product-card premium-card animate-fade-in"
-                style={{animationDelay: `${index * 0.1}s`}}
-              >
-                {product.isNew && <span className="new-badge">NEW</span>}
-                <div className="product-image-container">
-                  <img src={product.image} alt={product.name} className="product-image" />
-                  <div className="product-actions">
-                    <button className="action-button wishlist-button">
-                      <FaHeart />
-                    </button>
-                    <button 
-                      className="action-button cart-button"
-                      onClick={() => handleAddToCart(product)}
-                    >
-                      <FaShoppingCart />
-                    </button>
-                    <button className="action-button view-button">
-                      <FaEye />
-                    </button>
-                  </div>
-                </div>
-                <div className="product-details">
-                  <h3 className="product-name">{product.name}</h3>
-                  <p className="product-price">{product.price}</p>
-                  <div className="product-rating">
-                    <span className="stars">{'★'.repeat(Math.floor(product.rating))}{'☆'.repeat(5 - Math.floor(product.rating))}</span>
-                    <span className="reviews">({product.reviews})</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <h2 className="section-title elegant-font" style={{color: 'white'}}>Luxury Awaits</h2>
+          <p className="section-subtitle" style={{color: 'rgba(255, 255, 255, 0.8)'}}>
+            Indulge in our exclusive collection of premium products
+          </p>
+          <Link to="/shop" className="primary-button" style={{marginTop: '2rem'}}>
+            Shop Now
+          </Link>
         </div>
       </section>
 
       {/* Testimonials Section */}
       <section className="testimonials-section">
-        <h2 className="section-title elegant-font">What Our Customers Say</h2>
+        <h2 className="section-title elegant-font">What Our Clients Say</h2>
         <p className="section-subtitle">Hear from our satisfied customers</p>
         
         <div className="testimonials-container">
@@ -375,7 +315,7 @@ const Body = () => {
               <div className="testimonial-author">
                 <img src={testimonial.avatar} alt={testimonial.name} className="testimonial-avatar" />
                 <div>
-                  <p className="testimonial-name">{testimonial.name}</p>
+                  <h4 className="testimonial-name">{testimonial.name}</h4>
                   <p className="testimonial-role">{testimonial.role}</p>
                 </div>
               </div>
@@ -387,36 +327,37 @@ const Body = () => {
       {/* Features Section */}
       <section className="features-section">
         <div className="feature">
-          <div className="feature-icon">🚚</div>
-          <h3>Free Shipping</h3>
-          <p>On orders over $50</p>
-        </div>
-        <div className="feature">
-          <div className="feature-icon">🔄</div>
-          <h3>Easy Returns</h3>
-          <p>30-day return policy</p>
+          <div className="feature-icon">✓</div>
+          <h3>Premium Quality</h3>
+          <p>Only the finest materials and craftsmanship</p>
         </div>
         <div className="feature">
           <div className="feature-icon">🔒</div>
-          <h3>Secure Payments</h3>
-          <p>Protected by encryption</p>
+          <h3>Secure Shopping</h3>
+          <p>Your transactions are always protected</p>
         </div>
         <div className="feature">
-          <div className="feature-icon">💬</div>
-          <h3>24/7 Support</h3>
-          <p>We're always here to help</p>
+          <div className="feature-icon">🚚</div>
+          <h3>Fast Delivery</h3>
+          <p>Express shipping on all premium items</p>
+        </div>
+        <div className="feature">
+          <div className="feature-icon">↩️</div>
+          <h3>Easy Returns</h3>
+          <p>30-day hassle-free return policy</p>
         </div>
       </section>
 
       {/* Newsletter Section */}
       <section className="newsletter-section">
         <div className="newsletter-content">
-          <h2 className="newsletter-title elegant-font">Join Our Newsletter</h2>
-          <p className="newsletter-subtitle">Stay updated with our latest products and exclusive offers</p>
-          <div className="newsletter-form">
-            <input type="email" placeholder="Your email address" className="newsletter-input" />
-            <button className="newsletter-button">Subscribe</button>
-          </div>
+          <h2 className="newsletter-title elegant-font">Join Our VIP List</h2>
+          <p className="newsletter-subtitle">Subscribe to receive exclusive offers and updates on new arrivals</p>
+          
+          <form className="newsletter-form">
+            <input type="email" className="newsletter-input" placeholder="Your email address" />
+            <button type="submit" className="newsletter-button">Subscribe</button>
+          </form>
         </div>
       </section>
     </div>

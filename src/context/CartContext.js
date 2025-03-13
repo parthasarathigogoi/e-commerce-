@@ -7,18 +7,14 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const { isAuthenticated, user } = useContext(AuthContext);
 
-  // Load cart items from localStorage when component mounts or user changes
+  // Load cart items from localStorage when component mounts
   useEffect(() => {
-    if (isAuthenticated && user) {
-      const savedCart = localStorage.getItem(`cart_${user.id}`);
-      if (savedCart) {
-        setCartItems(JSON.parse(savedCart));
-      } else {
-        setCartItems([]);
-      }
-    } else {
-      // Clear cart when not authenticated
-      setCartItems([]);
+    const savedCart = isAuthenticated && user 
+      ? localStorage.getItem(`cart_${user.id}`)
+      : localStorage.getItem('guest_cart');
+      
+    if (savedCart) {
+      setCartItems(JSON.parse(savedCart));
     }
   }, [isAuthenticated, user]);
 
@@ -26,16 +22,12 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     if (isAuthenticated && user) {
       localStorage.setItem(`cart_${user.id}`, JSON.stringify(cartItems));
+    } else {
+      localStorage.setItem('guest_cart', JSON.stringify(cartItems));
     }
   }, [cartItems, isAuthenticated, user]);
 
   const addToCart = (product) => {
-    if (!isAuthenticated) {
-      // Optionally show a message that user needs to login
-      console.log('Please login to add items to cart');
-      return;
-    }
-
     setCartItems(prevItems => {
       const existingItem = prevItems.find(item => item.id === product.id);
       if (existingItem) {
@@ -50,12 +42,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeFromCart = (productId) => {
-    if (!isAuthenticated) return;
     setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
   };
 
   const updateQuantity = (productId, newQuantity) => {
-    if (!isAuthenticated) return;
     if (newQuantity < 1) {
       removeFromCart(productId);
       return;
@@ -73,6 +63,8 @@ export const CartProvider = ({ children }) => {
     setCartItems([]);
     if (isAuthenticated && user) {
       localStorage.removeItem(`cart_${user.id}`);
+    } else {
+      localStorage.removeItem('guest_cart');
     }
   };
 

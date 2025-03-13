@@ -39,10 +39,10 @@ const ProductVideo = () => {
         <video 
           ref={videoRef}
           className="product-video"
-          poster="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80"
+          poster="https://images.unsplash.com/photo-1490367532201-b9bc1dc483f6?w=800&q=80"
           onClick={togglePlay}
         >
-          <source src="https://assets.mixkit.co/videos/preview/mixkit-fashion-model-with-a-black-and-white-outfit-39880-large.mp4" type="video/mp4" />
+          <source src="https://assets.mixkit.co/videos/preview/mixkit-elegant-fashion-model-in-a-store-39878-large.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         
@@ -73,8 +73,33 @@ const ProductVideo = () => {
         
         <div className="video-overlay">
           <div className="overlay-content">
-            <h3>Elegance in Motion</h3>
-            <p>Discover our timeless collection</p>
+            <h3>Luxury Craftsmanship</h3>
+            <p>Experience the art of premium design</p>
+          </div>
+        </div>
+      </div>
+      
+      <div className="video-description">
+        <div className="video-description-content">
+          <h4>The Essence of Luxury</h4>
+          <p>
+            Our premium collections represent the pinnacle of craftsmanship and design. 
+            Each piece is meticulously created using only the finest materials and techniques, 
+            ensuring unparalleled quality and elegance.
+          </p>
+          <div className="video-features">
+            <div className="video-feature">
+              <span className="feature-icon">✓</span>
+              <span>Handcrafted Excellence</span>
+            </div>
+            <div className="video-feature">
+              <span className="feature-icon">✓</span>
+              <span>Premium Materials</span>
+            </div>
+            <div className="video-feature">
+              <span className="feature-icon">✓</span>
+              <span>Timeless Design</span>
+            </div>
           </div>
         </div>
       </div>

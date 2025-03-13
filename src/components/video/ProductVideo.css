@@ -1,8 +1,9 @@
 .product-video-container {
   width: 100%;
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 1rem;
+  position: relative;
 }
 
 .video-wrapper {
@@ -10,8 +11,14 @@
   width: 100%;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   background-color: #000;
+  transform: perspective(1000px) rotateX(0deg);
+  transition: transform 0.5s ease;
+}
+
+.video-wrapper:hover {
+  transform: perspective(1000px) rotateX(2deg);
 }
 
 .product-video {
@@ -21,17 +28,13 @@
   transition: all 0.5s ease;
 }
 
-.video-wrapper:hover .product-video {
-  transform: scale(1.02);
-}
-
 .video-controls {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-  padding: 1rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  padding: 1.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -48,18 +51,19 @@
   border: none;
   color: white;
   cursor: pointer;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(212, 175, 55, 0.3);
   transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
 }
 
 .play-button:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(212, 175, 55, 0.5);
   transform: scale(1.1);
 }
 
@@ -69,13 +73,28 @@
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 2px;
   overflow: hidden;
+  position: relative;
 }
 
 .progress-filled {
   height: 100%;
-  background-color: white;
+  background: linear-gradient(to right, #d4af37, #f9e076);
   width: 0;
   transition: width 0.1s linear;
+  position: relative;
+}
+
+.progress-filled::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  background-color: #f9e076;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(249, 224, 118, 0.8);
 }
 
 .video-overlay {
@@ -87,7 +106,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.4);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -99,11 +118,25 @@
 .overlay-content {
   text-align: center;
   color: white;
-  padding: 2rem;
-  background-color: rgba(0, 0, 0, 0.6);
-  border-radius: 4px;
+  padding: 2.5rem;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
   transform: translateY(20px);
   transition: transform 0.3s ease;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.overlay-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to right, #d4af37, #f9e076, #d4af37);
 }
 
 .video-wrapper:hover .overlay-content {
@@ -112,14 +145,121 @@
 
 .overlay-content h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 1.8rem;
-  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  margin-bottom: 0.8rem;
   letter-spacing: 1px;
+  position: relative;
+  display: inline-block;
+}
+
+.overlay-content h3::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 2px;
+  background-color: #d4af37;
 }
 
 .overlay-content p {
-  font-size: 1rem;
-  opacity: 0.8;
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin-top: 1rem;
+}
+
+/* Video Description */
+.video-description {
+  margin-top: 3rem;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.video-description::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to right, #d4af37, #f9e076, #d4af37);
+}
+
+.video-description-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.video-description h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: #1a1a1a;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  position: relative;
+  display: inline-block;
+}
+
+.video-description h4::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background-color: #d4af37;
+}
+
+.video-description p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 2rem;
+}
+
+.video-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.video-feature {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.video-feature:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.video-feature .feature-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1a1a1a;
+  color: #d4af37;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.video-feature span:last-child {
+  font-weight: 500;
+  color: #333;
 }
 
 @media (max-width: 768px) {
@@ -127,23 +267,13 @@
     padding: 0.5rem;
   }
   
-  .overlay-content h3 {
-    font-size: 1.5rem;
-  }
-  
-  .overlay-content p {
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 576px) {
   .video-controls {
-    padding: 0.8rem;
+    padding: 1rem;
   }
   
   .play-button {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
   }
   
   .overlay-content {
@@ -151,6 +281,41 @@
   }
   
   .overlay-content h3 {
+    font-size: 1.5rem;
+  }
+  
+  .overlay-content p {
+    font-size: 1rem;
+  }
+  
+  .video-description {
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  .video-description h4 {
+    font-size: 1.5rem;
+  }
+  
+  .video-description p {
+    font-size: 1rem;
+  }
+  
+  .video-features {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .overlay-content h3 {
     font-size: 1.2rem;
+  }
+  
+  .overlay-content p {
+    font-size: 0.9rem;
+  }
+  
+  .video-description h4 {
+    font-size: 1.3rem;
   }
 } 
