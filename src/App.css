@@ -1,17 +1,37 @@
 .product-video {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-  }
-  
-  .product-video iframe {
-    max-width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 40px 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-  /* Ensure full height layout */
+.product-video::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.2) 0%, rgba(51, 51, 51, 0.2) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.product-video iframe {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  z-index: 0;
+}
+
+/* Ensure full height layout */
 html, body, #root {
   height: 100%;
   margin: 0;
@@ -22,15 +42,196 @@ html, body, #root {
 
 /* App container */
 .app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Full height of viewport */
+  min-height: 100vh;
+  background-color: var(--light);
+  position: relative;
+  overflow-x: hidden;
 }
 
 /* Main content should expand to fill remaining space */
 .main-content {
   flex: 1; /* This pushes the footer down */
   padding-bottom: 20px; /* Avoids content overlapping the footer */
+  position: relative;
 }
 
+/* Creative blob background */
+.creative-blob {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.blob-1 {
+  top: -200px;
+  right: -200px;
+  background: linear-gradient(45deg, #000, #333);
+  animation: float 15s ease-in-out infinite;
+}
+
+.blob-2 {
+  bottom: -200px;
+  left: -200px;
+  background: linear-gradient(-45deg, #222, #444);
+  animation: float 18s ease-in-out infinite reverse;
+}
+
+/* Elegant section divider */
+.elegant-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.2), transparent);
+  margin: 3rem auto;
+  width: 80%;
+}
+
+/* Featured section with dark theme */
+.featured-section {
+  position: relative;
+  padding: 60px 0;
+  background-color: var(--dark-color);
+  color: white;
+}
+
+.featured-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.featured-section .container {
+  position: relative;
+  z-index: 2;
+}
+
+/* Product video styling */
+.product-video {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  display: block;
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg);
+  transition: transform 0.3s ease;
+}
+
+.product-video:hover {
+  transform: scale(1.02);
+}
+
+/* Testimonial section */
+.testimonial {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease;
+}
+
+.testimonial:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.testimonial-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Animation keyframes */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .creative-blob {
+    width: 400px;
+    height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .creative-blob {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 576px) {
+  .creative-blob {
+    display: none;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
+
+/* Featured section styling */
+.featured-section {
+  position: relative;
+  padding: 60px 0;
+  background-color: var(--dark-color);
+  color: white;
+}
+
+.featured-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.testimonial-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.testimonial-role {
+  font-size: 0.9rem;
+  color: var(--accent-color);
+}
   

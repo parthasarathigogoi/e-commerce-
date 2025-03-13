@@ -1,44 +1,82 @@
-import React from 'react';
-import './Video.css';
+import React, { useRef, useState, useEffect } from 'react';
+import './ProductVideo.css';
 
 const ProductVideo = () => {
+  const videoRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    
+    const handleTimeUpdate = () => {
+      const currentProgress = (video.currentTime / video.duration) * 100;
+      setProgress(currentProgress);
+    };
+    
+    video.addEventListener('timeupdate', handleTimeUpdate);
+    
+    return () => {
+      video.removeEventListener('timeupdate', handleTimeUpdate);
+    };
+  }, []);
+
+  const togglePlay = () => {
+    const video = videoRef.current;
+    
+    if (video.paused) {
+      video.play();
+      setIsPlaying(true);
+    } else {
+      video.pause();
+      setIsPlaying(false);
+    }
+  };
+
   return (
-    <div className="video-container">
-      {/* Embedded YouTube Video */}
-      
-      <iframe
-        width="100%"
-        height="400"
-        src="https://www.youtube.com/embed/9ckLyN48wLM?autoplay=1&mute=1"
-        title="YouTube Video"
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerPolicy="strict-origin-when-cross-origin"
-        allowFullScreen
-      ></iframe>
-     <video width="90%" height="450" controls autoPlay muted>
-        <source src="https://www.apple.com/105/media/ww/iphone/family/2025/e7ff365a-cb59-4ce9-9cdf-4cb965455b69/anim/welcome3/large.mp4" />
+    <div className="product-video-container">
+      <div className="video-wrapper">
+        <video 
+          ref={videoRef}
+          className="product-video"
+          poster="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80"
+          onClick={togglePlay}
+        >
+          <source src="https://assets.mixkit.co/videos/preview/mixkit-fashion-model-with-a-black-and-white-outfit-39880-large.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
         
-      </video>
-
-      {/* Advertisement Section */}
-      
-      <div className="advertisements">
-        <a href="https://www.apple.com/in/iphone/" target="_blank" rel="noopener noreferrer">
-          <img src="https://www.apple.com/v/iphone/home/cb/images/overview/select/iphone_16pro__erw9alves2qa_large.png" alt="Apple iPhone " />
-        </a>
-
-        <a href="https://www.samsung.com/global/galaxy/" target="_blank" rel="noopener noreferrer">
-          <img src="https://images.samsung.com/is/image/samsung/assets/in/home/250212/684x684_Big_Tile_Paradigm.jpg?$684_684_JPG$" alt="Samsung Galaxy S23 Ultra Ad" />
-        </a>
-
-        <a href="https://www.oneplus.in/oneplus-12" target="_blank" rel="noopener noreferrer">
-          <img src="https://www.oneplus.in/content/dam/oneplus/2025/components/hero-banner/13R_Tablet_0107.jpg" alt="OnePlus 12 Ad" />
-        </a>
-
-        <a href="https://www.mi.com/global/mi-13-pro" target="_blank" rel="noopener noreferrer">
-          <img src="https://i02.appmifile.com/267_operator_sg/05/01/2025/934ec25b1a78235d51a0582d10b11b67.jpg?f=webp" alt="Xiaomi Mi 13 Pro Ad" />
-        </a>
+        <div className="video-controls">
+          <button 
+            className="play-button" 
+            onClick={togglePlay}
+            aria-label={isPlaying ? 'Pause' : 'Play'}
+          >
+            {isPlaying ? (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            )}
+          </button>
+          
+          <div className="progress-bar">
+            <div 
+              className="progress-filled"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+        </div>
+        
+        <div className="video-overlay">
+          <div className="overlay-content">
+            <h3>Elegance in Motion</h3>
+            <p>Discover our timeless collection</p>
+          </div>
+        </div>
       </div>
     </div>
   );

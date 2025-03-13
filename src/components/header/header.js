@@ -79,91 +79,180 @@
 
 // export default Header;
 
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
-import "./header.css";
-import SearchIcon from "@mui/icons-material/Search";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import React, { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
+import './header.css';
+import { FaSearch, FaShoppingCart, FaUser, FaBars, FaTimes } from 'react-icons/fa';
+import { useCart } from '../../context/CartContext';
+import { AuthContext } from '../../App';
+import ProfileDropdown from './ProfileDropdown';
 
-const Header = () => {
+const Header = ({ onCartClick, onAuthClick }) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchActive, setSearchActive] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const { getCartCount } = useCart();
+  const { isAuthenticated } = useContext(AuthContext);
+
+  // Handle scroll event to change header style
   useEffect(() => {
-    const cartIcon = document.querySelector(".icon-button[aria-label='Cart']");
-    
-    if (cartIcon) {
-      const handleClick = () => console.log("Button clicked");
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
 
-      cartIcon.addEventListener("click", handleClick);
-
-      return () => {
-        cartIcon.removeEventListener("click", handleClick);
-      };
-    }
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isProfileDropdownOpen && !event.target.closest('.profile-section')) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [isProfileDropdownOpen]);
+
+  // Toggle mobile menu
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  // Toggle search bar
+  const toggleSearch = () => {
+    setSearchActive(!searchActive);
+    if (searchActive) {
+      setSearchQuery('');
+    }
+  };
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Handle search submission
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    console.log('Searching for:', searchQuery);
+    setSearchActive(false);
+    setSearchQuery('');
+  };
+
+  // Handle profile button click
+  const handleProfileClick = (e) => {
+    e.stopPropagation();
+    if (isAuthenticated) {
+      setIsProfileDropdownOpen(!isProfileDropdownOpen);
+    } else {
+      onAuthClick();
+    }
+  };
+
   return (
-    <header className="header">
-      <div className="container-fluid px-3">
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <Link className="navbar-brand d-flex align-items-center" to="/">
-            <img
-              src={`${process.env.PUBLIC_URL}/logo_no_bg.png`}
-              alt="Logo"
-              className="logo-img"
-            />
-            <span className="brand-text">Dukan</span>
-          </Link>
+    <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
+      <div className="header-container">
+        {/* Logo */}
+        <Link to="/" className="logo">
+          <span className="logo-text">
+            <span className="logo-elegant">ELEGANCE</span>
+          </span>
+        </Link>
 
-          {/* Navbar Toggler */}
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
+        {/* Desktop Navigation */}
+        <nav className={`nav-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+          <button className="close-menu" onClick={toggleMobileMenu}>
+            <FaTimes />
           </button>
+          <ul className="nav-list">
+            <li className="nav-item">
+              <Link to="/" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>
+                Home
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/shop" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>
+                Shop
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/categories" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>
+                Categories
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/contact" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>
+                Contact
+              </Link>
+            </li>
+          </ul>
+        </nav>
 
-          {/* Navbar Items */}
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav me-auto">
-              <li className="nav-item">
-                <Link className="nav-link" to="/">Home</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/products">Products</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/services">Services</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/contact">Contact Us</Link>
-              </li>
-            </ul>
-
-            {/* Icons & Search Bar */}
-            <div className="icon-container d-flex align-items-center">
+        {/* Header Actions */}
+        <div className="header-actions">
+          {/* Search */}
+          <div className={`search-container ${searchActive ? 'active' : ''}`}>
+            <button className="action-button search-button" onClick={toggleSearch}>
+              <FaSearch />
+            </button>
+            <form className="search-form" onSubmit={handleSearchSubmit}>
               <input
                 type="text"
-                className="search-bar"
                 placeholder="Search for products..."
+                className="search-input"
+                value={searchQuery}
+                onChange={handleSearchChange}
               />
-              <button className="icon-button" aria-label="Search">
-                <SearchIcon className="header-icon" />
+              <button type="submit" className="search-submit">
+                <FaSearch />
               </button>
-              <button className="icon-button" aria-label="Account">
-                <AccountCircleIcon className="header-icon" />
-              </button>
-              <button className="icon-button" aria-label="Cart">
-                <ShoppingCartIcon className="header-icon" />
-              </button>
-            </div>
+            </form>
           </div>
-        </nav>
+
+          {/* User Profile / Auth */}
+          <div className="profile-section" style={{ position: 'relative' }}>
+            <button 
+              className={`action-button ${isAuthenticated ? 'profile-button' : 'login-button'}`}
+              onClick={handleProfileClick}
+              title={isAuthenticated ? 'My Account' : 'Login'}
+            >
+              <FaUser />
+            </button>
+            {isAuthenticated && (
+              <ProfileDropdown 
+                isOpen={isProfileDropdownOpen}
+                onClose={() => setIsProfileDropdownOpen(false)}
+                onLogout={onAuthClick}
+              />
+            )}
+          </div>
+
+          {/* Cart */}
+          <button className="action-button cart-button" onClick={onCartClick}>
+            <FaShoppingCart />
+            <span className="cart-badge">{getCartCount()}</span>
+          </button>
+
+          {/* Mobile Menu Toggle */}
+          <button className="mobile-menu-toggle" onClick={toggleMobileMenu}>
+            <FaBars />
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="menu-overlay" onClick={toggleMobileMenu}></div>
+      )}
     </header>
   );
 };

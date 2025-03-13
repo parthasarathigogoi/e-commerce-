@@ -1,0 +1,58 @@
+[debug] [2025-03-13T07:45:44.629Z] ----------------------------------------------------------------------
+[debug] [2025-03-13T07:45:44.631Z] Command:       /opt/homebrew/Cellar/node/23.7.0/bin/node /opt/homebrew/bin/firebase init
+[debug] [2025-03-13T07:45:44.631Z] CLI Version:   13.34.0
+[debug] [2025-03-13T07:45:44.631Z] Platform:      darwin
+[debug] [2025-03-13T07:45:44.631Z] Node Version:  v23.7.0
+[debug] [2025-03-13T07:45:44.631Z] Time:          Thu Mar 13 2025 13:15:44 GMT+0530 (India Standard Time)
+[debug] [2025-03-13T07:45:44.631Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-03-13T07:45:44.634Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-03-13T07:45:44.634Z] > authorizing via signed-in user (imjuneahmed6@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /Users/juneahmed/e-commerce-
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[info] i  If you want to create a project in a Google Cloud organization or folder, please use "firebase projects:create" instead, and return to this command when you've created the project. 
+[debug] [2025-03-13T07:46:14.323Z] Checked if tokens are valid: true, expires at: 1741855290303
+[debug] [2025-03-13T07:46:14.323Z] Checked if tokens are valid: true, expires at: 1741855290303
+[debug] [2025-03-13T07:46:14.325Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects [none]
+[debug] [2025-03-13T07:46:14.325Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"projectId":"june1234","name":"ecomm"}
+[debug] [2025-03-13T07:46:16.902Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects 200
+[debug] [2025-03-13T07:46:16.902Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"name":"operations/cp.8496214928752983763"}
+[debug] [2025-03-13T07:46:16.903Z] Checked if tokens are valid: true, expires at: 1741855290303
+[debug] [2025-03-13T07:46:16.903Z] Checked if tokens are valid: true, expires at: 1741855290303
+[debug] [2025-03-13T07:46:16.903Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.8496214928752983763 [none]
+[debug] [2025-03-13T07:46:18.685Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.8496214928752983763 200
+[debug] [2025-03-13T07:46:18.685Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.8496214928752983763 {"name":"operations/cp.8496214928752983763"}
+[debug] [2025-03-13T07:46:19.187Z] [Project Creation Poller] Retrying task index 0
+[debug] [2025-03-13T07:46:19.188Z] Checked if tokens are valid: true, expires at: 1741855290303
+[debug] [2025-03-13T07:46:19.188Z] Checked if tokens are valid: true, expires at: 1741855290303
+[debug] [2025-03-13T07:46:19.189Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.8496214928752983763 [none]
+[debug] [2025-03-13T07:46:19.809Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.8496214928752983763 200
+[debug] [2025-03-13T07:46:19.810Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.8496214928752983763 {"name":"operations/cp.8496214928752983763","metadata":{"@type":"type.googleapis.com/google.cloudresourcemanager.v1.ProjectCreationStatus","gettable":true,"ready":true},"done":true,"response":{"@type":"type.googleapis.com/google.cloudresourcemanager.v1.Project","projectNumber":"1079676360797","projectId":"june1234","lifecycleState":"ACTIVE","name":"ecomm","createTime":"2025-03-13T07:46:18.255269Z"}}
+[debug] [2025-03-13T07:46:19.812Z] Checked if tokens are valid: true, expires at: 1741855290303
+[debug] [2025-03-13T07:46:19.812Z] Checked if tokens are valid: true, expires at: 1741855290303
+[debug] [2025-03-13T07:46:19.812Z] >>> [apiv2][query] POST https://firebase.googleapis.com/v1beta1/projects/june1234:addFirebase [none]
+[debug] [2025-03-13T07:46:20.881Z] <<< [apiv2][status] POST https://firebase.googleapis.com/v1beta1/projects/june1234:addFirebase 403
+[debug] [2025-03-13T07:46:20.881Z] <<< [apiv2][body] POST https://firebase.googleapis.com/v1beta1/projects/june1234:addFirebase {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2025-03-13T07:46:20.882Z] Request to https://firebase.googleapis.com/v1beta1/projects/june1234:addFirebase had HTTP Error: 403, The caller does not have permission
+[debug] [2025-03-13T07:46:21.245Z] FirebaseError: Request to https://firebase.googleapis.com/v1beta1/projects/june1234:addFirebase had HTTP Error: 403, The caller does not have permission
+    at responseToError (/opt/homebrew/lib/node_modules/firebase-tools/lib/responseToError.js:52:12)
+    at RetryOperation._fn (/opt/homebrew/lib/node_modules/firebase-tools/lib/apiv2.js:312:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[error] 
+[error] Error: Failed to add Firebase to Google Cloud Platform project. See firebase-debug.log for more info.

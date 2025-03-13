@@ -6,22 +6,21 @@ const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("./backend/models/User"); // Import User Model
-const adminRoutes = require("./backend/routes/adminroutes"); // Import Admin Routes
+const adminRoutes = require("./backend/routes/adminRoutes"); // Fix import path case
+const productsRouter = require('./routes/products');
 
 const app = express();
 const server = http.createServer(app);
 
 app.use(express.json()); // Middleware to parse JSON data
 app.use(cors()); // Enable CORS
+app.use(express.static('public'));
 
 // MongoDB Connection
 const mongoURI = process.env.MONGO_URI;
 
 mongoose
-  .connect(mongoURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(mongoURI)
   .then(() => console.log("✅ MongoDB Connected Successfully"))
   .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
@@ -75,11 +74,8 @@ app.post("/api/login", async (req, res) => {
       return res.status(400).json({ message: "❌ Invalid Email or Password!" });
     }
 
-    // Check if user is admin
-    const isAdmin = email === process.env.ADMIN_EMAIL;
-
     // Generate JWT Token
-    const token = jwt.sign({ userId: user._id, isAdmin }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET, {
       expiresIn: "1h", // Token expires in 1 hour
     });
 
@@ -87,8 +83,8 @@ app.post("/api/login", async (req, res) => {
       message: "✅ Login Successful!", 
       token, 
       userId: user._id, 
-      isAdmin, 
-      redirectTo: "/home" // Redirecting to home page after successful login
+      isAdmin: user.isAdmin, 
+      redirectTo: "/" // Redirecting to home page after successful login
     });
   } catch (error) {
     res.status(500).json({ message: "❌ Server error", error });
@@ -114,8 +110,11 @@ const verifyAdmin = (req, res, next) => {
 // Protected Admin Route
 app.use("/api/admin", verifyAdmin, adminRoutes);
 
+// Routes
+app.use('/api/products', productsRouter);
+
 // Start Server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });

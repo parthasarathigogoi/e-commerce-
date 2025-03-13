@@ -1,142 +1,104 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState, useEffect, createContext } from "react";
 
 // Components
 import Header from "./components/header/header";
 import Footer from "./components/footer/footer";
 import HeadRouting from "./AllRouting/HeadRouting";
 import ProdRouting from "./AllRouting/ProdRouting";
-import Login from "./components/pages/Login"; // Import Login Page
+import Cart from "./components/cart/Cart";
+import AuthModal from "./components/auth/AuthModal";
+
+// Context
+import { CartProvider } from "./context/CartContext";
+
+// Create Auth Context
+export const AuthContext = createContext({
+  isAuthenticated: false,
+  setIsAuthenticated: () => {},
+  user: null,
+  setUser: () => {}
+});
 
 function App() {
-  // Track authentication status
-  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
+  // Track authentication status and user data
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const token = localStorage.getItem("token");
+    return !!token;
+  });
+  const [user, setUser] = useState(() => {
+    const userId = localStorage.getItem("userId");
+    return userId ? { id: userId } : null;
+  });
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  // Listen for auth changes
+  // Effect to handle authentication state changes
   useEffect(() => {
-    const checkAuth = () => {
-      setIsAuthenticated(!!localStorage.getItem("token"));
-    };
-    window.addEventListener("storage", checkAuth);
-    return () => window.removeEventListener("storage", checkAuth);
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    
+    if (token && userId) {
+      setIsAuthenticated(true);
+      setUser({ id: userId });
+    } else {
+      setIsAuthenticated(false);
+      setUser(null);
+    }
   }, []);
 
+  // Handle authentication modal
+  const handleAuthClick = () => {
+    if (isAuthenticated) {
+      // Handle logout
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      setIsAuthenticated(false);
+      setUser(null);
+      // Close cart if open
+      setIsCartOpen(false);
+    } else {
+      // Open auth modal
+      setIsAuthModalOpen(true);
+    }
+  };
+
   return (
-    <div className="app-container">
-    <Router>
-      {/* Show Header and Footer only if the user is logged in */}
-      {isAuthenticated && <Header />}
-      <div className="main-content">
-      <Routes>
-        {/* Show Login Page First If Not Authenticated */}
-        {!isAuthenticated ? (
-          <Route path="*" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-        ) : (
-          <>
-            {/* Header & Footer only for authenticated users */}
-            <Route path="/*" element={
-              <>
-                {/* <Header /> */}
-              <HeadRouting />
-                <ProdRouting />
-              </>
-            } />
-              {/* <Footer /> */}
-          </>
-        )}
-
-        {/* Catch-all: Redirect unknown routes */}
-        <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/login"} />} />
-
-      </Routes>
-      </div>
-      
-    </Router>
-
-    {isAuthenticated && <Footer />}
-    </div>
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, user, setUser }}>
+      <CartProvider>
+        <div className="app-container">
+          {/* Creative Blobs - PicsArt inspired elements */}
+          <div className="creative-blob blob-1"></div>
+          <div className="creative-blob blob-2"></div>
+          
+          <Router>
+            <Header 
+              onCartClick={() => setIsCartOpen(true)} 
+              onAuthClick={handleAuthClick}
+            />
+            <div className="main-content">
+              <Routes>
+                <Route path="/*" element={
+                  <>
+                    <HeadRouting />
+                    <ProdRouting />
+                  </>
+                } />
+              </Routes>
+            </div>
+            <Footer />
+            <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+            <AuthModal 
+              isOpen={isAuthModalOpen} 
+              onClose={() => setIsAuthModalOpen(false)}
+            />
+          </Router>
+        </div>
+      </CartProvider>
+    </AuthContext.Provider>
   );
 }
 
 export default App;
-
-// import "bootstrap/dist/css/bootstrap.min.css";
-// import "./App.css";
-// import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-// import { useState, useEffect, createContext, useContext } from "react";
-
-// // Components
-// import Header from "./components/header/header";
-// import Footer from "./components/footer/footer";
-// import HeadRouting from "./AllRouting/HeadRouting";
-// import ProdRouting from "./AllRouting/ProdRouting";
-// import Login from "./components/pages/Login"; // Import Login Page
-
-// // Create Auth Context
-// const AuthContext = createContext();
-
-// // Auth Provider Component
-// const AuthProvider = ({ children }) => {
-//   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("authToken"));
-
-//   useEffect(() => {
-//     const checkAuth = () => {
-//       setIsAuthenticated(!!localStorage.getItem("authToken"));
-//     };
-
-//     // Listen for storage changes across tabs
-//     window.addEventListener("storage", checkAuth);
-
-//     // Manually check authentication on component mount
-//     checkAuth();
-
-//     return () => {
-//       window.removeEventListener("storage", checkAuth);
-//     };
-//   }, []);
-
-//   return (
-//     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
-
-// // Main App Component
-// function App() {
-//   const { isAuthenticated } = useContext(AuthContext);
-
-//   return (
-//     <Router>
-//       {isAuthenticated && <Header />}
-
-//       <Routes>
-//         <Route path="/login" element={<Login />} />
-//         <Route
-//           path="/*"
-//           element={isAuthenticated ? (
-//             <>
-//               <HeadRouting />
-//               <ProdRouting />
-//             </>
-//           ) : (
-//             <Navigate to="/login" replace />
-//           )}
-//         />
-//       </Routes>
-
-//       {isAuthenticated && <Footer />}
-//     </Router>
-//   );
-// }
-
-// // Wrap App in AuthProvider
-// export default function RootApp() {
-//   return (
-//     <AuthProvider>
-//       <App />
-//     </AuthProvider>
-//   );
-// }
