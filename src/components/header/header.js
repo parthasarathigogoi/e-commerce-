@@ -140,9 +140,13 @@ const Header = ({ onCartClick, onAuthClick, onSellerAuthClick }) => {
   // Handle search submission
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    console.log('Searching for:', searchQuery);
-    setSearchActive(false);
-    setSearchQuery('');
+    if (searchQuery.trim()) {
+      console.log('Searching for:', searchQuery);
+      // Navigate to shop page with search query parameter
+      navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchActive(false);
+      setSearchQuery('');
+    }
   };
 
   // Handle profile button click
@@ -202,7 +206,7 @@ const Header = ({ onCartClick, onAuthClick, onSellerAuthClick }) => {
                 Contact
               </Link>
             </li>
-            {isSellerAuthenticated && (
+            {isSellerAuthenticated && !isAuthenticated && (
               <li className="nav-item">
                 <Link to="/seller/dashboard" className="nav-link">
                   Seller Dashboard
@@ -234,13 +238,15 @@ const Header = ({ onCartClick, onAuthClick, onSellerAuthClick }) => {
           </div>
 
           {/* Seller Button */}
-          <button 
-            className={`action-button seller-button ${isSellerAuthenticated ? 'seller-active' : ''}`}
-            onClick={handleSellerClick}
-            title={isSellerAuthenticated ? 'Seller Dashboard' : 'Become a Seller'}
-          >
-            <FaStore />
-          </button>
+          {!isAuthenticated && (
+            <button 
+              className={`action-button seller-button ${isSellerAuthenticated ? 'seller-active' : ''}`}
+              onClick={handleSellerClick}
+              title={isSellerAuthenticated ? 'Seller Dashboard' : 'Become a Seller'}
+            >
+              <FaStore />
+            </button>
+          )}
 
           {/* User Profile / Auth */}
           <div className="profile-section" style={{ position: 'relative' }}>

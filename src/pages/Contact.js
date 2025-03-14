@@ -57,7 +57,7 @@ const Contact = () => {
             </div>
             <h3>Location</h3>
             <p>123 Business Street</p>
-            <p>New York, NY 10001</p>
+            <p>Guwahati, Assam, India</p>
           </div>
 
           <div className="info-card">
@@ -133,7 +133,7 @@ const Contact = () => {
       <div className="map-section">
         <iframe
           title="Location Map"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.25436351647!2d-74.11976373946229!3d40.69766374932921!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2s!4v1645454332403!5m2!1sen!2s"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d458034.1855766678!2d91.53245952386743!3d26.144090887166276!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x375a5a287f9133ff%3A0x2bbd1332436bde32!2sGuwahati%2C%20Assam!5e0!3m2!1sen!2sin!4v1651234567890!5m2!1sen!2sin"
           width="100%"
           height="400"
           style={{ border: 0 }}

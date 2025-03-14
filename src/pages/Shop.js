@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { FaShoppingCart, FaHeart, FaEye, FaFilter, FaChevronDown, FaStar, FaTimes, FaStore } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './Shop.css';
 import StickyOfferBar from '../components/offers/StickyOfferBar';
 import SpecialOffers from '../components/offers/SpecialOffers';
@@ -195,13 +195,28 @@ const Shop = () => {
     priceRange: { min: 0, max: 5000 },
     ratings: [],
     inStock: false,
-    sellerProducts: false
+    sellerProducts: false,
+    searchQuery: ''
   });
   const [sortBy, setSortBy] = useState('featured');
   const [notification, setNotification] = useState({ show: false, product: null });
   const { addToCart, cartItems } = useCart();
   const { getSellerProducts, sellerProducts } = useSeller();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Extract search query from URL parameters
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const searchQuery = queryParams.get('search');
+    
+    if (searchQuery) {
+      setFilters(prev => ({
+        ...prev,
+        searchQuery
+      }));
+    }
+  }, [location.search]);
 
   // Fetch seller products from localStorage
   useEffect(() => {
@@ -225,26 +240,45 @@ const Shop = () => {
         
         if (sellerProducts.length > 0) {
           // Transform seller products to match the product structure
-          const formattedSellerProducts = sellerProducts.map(product => ({
-            _id: product.id || `seller-${product.name.replace(/\s+/g, '-').toLowerCase()}`,
-            name: product.name,
-            price: parseFloat(product.price),
-            description: product.description,
-            image: product.image || '/images/placeholder.jpg',
-            category: product.category,
-            rating: 5.0, // Default rating for new seller products
-            reviews: 0,
-            inStock: product.stock > 0,
-            isNew: true,
-            isTrending: false,
-            discount: 0,
-            isSeller: true // Flag to identify seller products
-          }));
+          const formattedSellerProducts = sellerProducts.map(product => {
+            // Ensure stock is parsed as an integer
+            const stockQuantity = parseInt(product.stock);
+            
+            return {
+              _id: product.id || `seller-${product.name.replace(/\s+/g, '-').toLowerCase()}`,
+              name: product.name,
+              price: parseFloat(product.price),
+              description: product.description,
+              image: product.image || '/images/placeholder.jpg',
+              category: product.category,
+              rating: 5.0, // Default rating for new seller products
+              reviews: 0,
+              // Explicitly calculate inStock based on stock quantity
+              inStock: stockQuantity > 0,
+              stock: stockQuantity,
+              isNew: true,
+              isTrending: false,
+              discount: parseInt(product.discount) || 0,
+              isSeller: true // Flag to identify seller products
+            };
+          });
+          
+          console.log('Formatted seller products:', formattedSellerProducts.map(p => ({ name: p.name, stock: p.stock, inStock: p.inStock })));
           
           allProducts = [...allProducts, ...formattedSellerProducts];
         }
         
         let filteredProducts = [...allProducts];
+        
+        // Apply search query filter
+        if (filters.searchQuery) {
+          const query = filters.searchQuery.toLowerCase();
+          filteredProducts = filteredProducts.filter(product => 
+            product.name.toLowerCase().includes(query) || 
+            product.description.toLowerCase().includes(query) ||
+            product.category.toLowerCase().includes(query)
+          );
+        }
         
         // Apply seller products filter
         if (filters.sellerProducts) {
@@ -273,9 +307,7 @@ const Shop = () => {
         
         // Apply in stock filter
         if (filters.inStock) {
-          filteredProducts = filteredProducts.filter(
-            product => product.inStock
-          );
+          filteredProducts = filteredProducts.filter(product => product.inStock === true);
         }
         
         // Apply sorting
@@ -375,7 +407,8 @@ const Shop = () => {
       priceRange: { min: 0, max: 5000 },
       ratings: [],
       inStock: false,
-      sellerProducts: false
+      sellerProducts: false,
+      searchQuery: ''
     });
     setSortBy('featured');
     setProducts(mockProducts);

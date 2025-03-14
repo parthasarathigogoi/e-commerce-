@@ -56,7 +56,7 @@ export const SellerProvider = ({ children }) => {
       const userToken = localStorage.getItem('token');
       
       // If user token was added and seller is logged in, log out seller
-      if (e.key === 'token' && e.oldValue === null && e.newValue && sellerToken) {
+      if (e.key === 'token' && e.newValue && sellerToken) {
         console.log('User logged in, logging out seller');
         localStorage.removeItem('sellerToken');
         localStorage.removeItem('sellerData');
@@ -93,6 +93,17 @@ export const SellerProvider = ({ children }) => {
     
     // Listen for storage changes
     window.addEventListener('storage', handleStorageChange);
+    
+    // Check for user token on mount and clear seller session if needed
+    const userToken = localStorage.getItem('token');
+    const sellerToken = localStorage.getItem('sellerToken');
+    
+    if (userToken && sellerToken) {
+      localStorage.removeItem('sellerToken');
+      localStorage.removeItem('sellerData');
+      setIsSellerAuthenticated(false);
+      setSellerData(null);
+    }
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
@@ -212,6 +223,9 @@ export const SellerProvider = ({ children }) => {
       // Generate a unique ID for the product
       const productId = 'product_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
       
+      // Parse stock as integer to ensure proper comparison
+      const stockQuantity = parseInt(productData.stock);
+      
       // Create new product with ID and additional required fields
       const newProduct = {
         ...productData,
@@ -221,8 +235,9 @@ export const SellerProvider = ({ children }) => {
         sellerId: sellerData?.id,
         rating: productData.rating || 4.5, // Default rating
         reviews: productData.reviews || 0, // Default reviews
-        inStock: parseInt(productData.stock) > 0, // Ensure inStock is properly set based on stock quantity
-        stock: parseInt(productData.stock) // Ensure stock is an integer
+        inStock: stockQuantity > 0, // Ensure inStock is properly set based on stock quantity
+        stock: stockQuantity, // Ensure stock is an integer
+        isSeller: true // Flag to identify seller products
       };
       
       console.log('Adding new product:', newProduct);
@@ -249,27 +264,34 @@ export const SellerProvider = ({ children }) => {
       // Update state
       setSellerProducts(updatedProducts);
       
-      // Also add to shop products if needed
+      // Also add to shop products
       try {
+        // Get existing shop products or initialize empty array
         const shopProducts = JSON.parse(localStorage.getItem('shopProducts')) || [];
+        
+        // Create a shop-specific version of the product
+        const shopProduct = {
+          ...newProduct,
+          inStock: stockQuantity > 0 // Explicitly set inStock again for shop product
+        };
         
         // Check if product already exists in shop products
         const existingIndex = shopProducts.findIndex(p => 
-          (p.id === newProduct.id) || (p._id === newProduct.id)
+          (p.id === shopProduct.id) || (p._id === shopProduct.id)
         );
         
         let updatedShopProducts;
         if (existingIndex >= 0) {
           // Update existing product
           updatedShopProducts = [...shopProducts];
-          updatedShopProducts[existingIndex] = newProduct;
+          updatedShopProducts[existingIndex] = shopProduct;
         } else {
           // Add new product
-          updatedShopProducts = [...shopProducts, newProduct];
+          updatedShopProducts = [...shopProducts, shopProduct];
         }
         
         localStorage.setItem('shopProducts', JSON.stringify(updatedShopProducts));
-        console.log('Product added to shop products successfully');
+        console.log('Product added to shop products successfully with inStock:', shopProduct.inStock);
       } catch (error) {
         console.error('Error updating shop products:', error);
       }
@@ -293,6 +315,9 @@ export const SellerProvider = ({ children }) => {
       }
 
       console.log('Updating product with ID:', productId);
+      
+      // Parse stock as integer to ensure proper comparison
+      const stockQuantity = parseInt(productData.stock);
 
       // Get current products from localStorage
       let currentProducts = [];
@@ -324,7 +349,8 @@ export const SellerProvider = ({ children }) => {
           const updatedProduct = { 
             ...product, 
             ...productData,
-            inStock: parseInt(productData.stock) > 0
+            inStock: stockQuantity > 0,
+            stock: stockQuantity
           };
           return updatedProduct;
         }
@@ -349,10 +375,11 @@ export const SellerProvider = ({ children }) => {
           updatedShopProducts[productIndex] = {
             ...shopProducts[productIndex],
             ...productData,
-            inStock: parseInt(productData.stock) > 0
+            inStock: stockQuantity > 0,
+            stock: stockQuantity
           };
           localStorage.setItem('shopProducts', JSON.stringify(updatedShopProducts));
-          console.log('Shop products updated successfully');
+          console.log('Shop products updated successfully with inStock:', stockQuantity > 0);
         }
       } catch (error) {
         console.error('Error updating shop products:', error);

@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
-import { useState, useEffect, createContext } from "react";
+import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import { useState, useEffect, createContext, useContext } from "react";
 
 // Components
 import Header from "./components/header/header";
@@ -15,7 +15,7 @@ import SellerDashboard from "./pages/SellerDashboard";
 
 // Context
 import { CartProvider } from "./context/CartContext";
-import { SellerProvider } from "./context/SellerContext";
+import { SellerProvider, useSeller } from "./context/SellerContext";
 
 // Create Auth Context
 export const AuthContext = createContext({
@@ -24,6 +24,19 @@ export const AuthContext = createContext({
   user: null,
   setUser: () => {}
 });
+
+// Protected Route Component
+const SellerProtectedRoute = ({ children }) => {
+  const { isSellerAuthenticated } = useSeller();
+  const authContext = useContext(AuthContext);
+  
+  // Redirect to home if not authenticated as seller or if authenticated as regular user
+  if (!isSellerAuthenticated || authContext.isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+  
+  return children;
+};
 
 // App Content Component (to use hooks inside Router)
 function AppContent() {
@@ -41,10 +54,18 @@ function AppContent() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isSellerAuthModalOpen, setIsSellerAuthModalOpen] = useState(false);
 
-  // Effect to handle authentication state changes
+  // Effect to handle authentication state changes and check for conflicting logins
   useEffect(() => {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
+    const sellerToken = localStorage.getItem("sellerToken");
+    
+    // If both user and seller are logged in, prioritize user and log out seller
+    if (token && sellerToken) {
+      localStorage.removeItem("sellerToken");
+      localStorage.removeItem("sellerData");
+      console.log("Conflicting logins detected: User login prioritized, seller logged out");
+    }
     
     if (token && userId) {
       setIsAuthenticated(true);
@@ -55,22 +76,21 @@ function AppContent() {
     }
   }, []);
 
-  // Effect to check for seller login/logout and update customer auth state
+  // Effect to handle storage changes for authentication
   useEffect(() => {
     const handleStorageChange = () => {
       const token = localStorage.getItem("token");
       const userId = localStorage.getItem("userId");
       const sellerToken = localStorage.getItem("sellerToken");
       
-      // If seller logs in, log out customer
-      if (sellerToken && token) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("userId");
-        setIsAuthenticated(false);
-        setUser(null);
+      // If both user and seller are logged in, prioritize user and log out seller
+      if (token && sellerToken) {
+        localStorage.removeItem("sellerToken");
+        localStorage.removeItem("sellerData");
+        console.log("Storage change: User login prioritized, seller logged out");
       }
       
-      // Update customer auth state
+      // Update authentication state based on token presence
       if (token && userId) {
         setIsAuthenticated(true);
         setUser({ id: userId });
@@ -133,7 +153,11 @@ function AppContent() {
                     <ProdRouting />
                   </>
                 } />
-                <Route path="/seller/dashboard" element={<SellerDashboard />} />
+                <Route path="/seller/dashboard" element={
+                  <SellerProtectedRoute>
+                    <SellerDashboard />
+                  </SellerProtectedRoute>
+                } />
               </Routes>
             </div>
             <Footer />

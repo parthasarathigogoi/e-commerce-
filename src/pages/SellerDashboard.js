@@ -64,17 +64,30 @@ const SellerDashboard = () => {
   const loadProducts = async () => {
     setLoading(true);
     try {
-      // Get products directly from localStorage to ensure we have the latest data
-      const storedProducts = localStorage.getItem('sellerProducts');
-      if (storedProducts) {
-        const parsedProducts = JSON.parse(storedProducts);
-        if (Array.isArray(parsedProducts)) {
-          setProducts(parsedProducts);
+      // Check if seller is authenticated before loading products
+      if (!isSellerAuthenticated) {
+        setLoading(false);
+        return;
+      }
+      
+      // Get products from context first
+      const result = await getSellerProducts();
+      
+      if (result.success && Array.isArray(result.products)) {
+        setProducts(result.products);
+      } else {
+        // Fallback to localStorage if context method fails
+        const storedProducts = localStorage.getItem('sellerProducts');
+        if (storedProducts) {
+          const parsedProducts = JSON.parse(storedProducts);
+          if (Array.isArray(parsedProducts)) {
+            setProducts(parsedProducts);
+          } else {
+            setProducts([]);
+          }
         } else {
           setProducts([]);
         }
-      } else {
-        setProducts([]);
       }
       setError('');
     } catch (err) {
@@ -188,7 +201,7 @@ const SellerDashboard = () => {
       console.log('Submitting new product:', newProduct);
 
       // Add product
-      const result = addProduct(newProduct);
+      const result = await addProduct(newProduct);
       
       if (result.success) {
         console.log('Product added successfully:', result.product);
@@ -207,23 +220,8 @@ const SellerDashboard = () => {
           discount: '0'
         });
         
-        // Update the products list with the newly added product
-        if (result.product) {
-          setProducts(prevProducts => [...prevProducts, result.product]);
-        } else {
-          // If result.product is not available, refresh from localStorage
-          try {
-            const storedProducts = localStorage.getItem('sellerProducts');
-            if (storedProducts) {
-              const parsedProducts = JSON.parse(storedProducts);
-              if (Array.isArray(parsedProducts)) {
-                setProducts(parsedProducts);
-              }
-            }
-          } catch (err) {
-            console.error('Error refreshing products:', err);
-          }
-        }
+        // Refresh products list to ensure we have the latest data
+        loadProducts();
         
         setSuccess('Product added successfully! You can add another product or go back.');
         
@@ -297,28 +295,14 @@ const SellerDashboard = () => {
       console.log('Updating product:', updatedProduct);
 
       // Update product
-      const result = updateProduct(currentProduct.id, updatedProduct);
+      const result = await updateProduct(currentProduct.id, updatedProduct);
       
       if (result.success) {
         console.log('Product updated successfully');
         setSuccess('Product updated successfully');
         
-        // Also update shop products to ensure consistency
-        try {
-          const shopProducts = JSON.parse(localStorage.getItem('shopProducts')) || [];
-          const productIndex = shopProducts.findIndex(p => 
-            (p.id === currentProduct.id) || (p._id === currentProduct.id)
-          );
-          
-          if (productIndex >= 0) {
-            const updatedShopProducts = [...shopProducts];
-            updatedShopProducts[productIndex] = updatedProduct;
-            localStorage.setItem('shopProducts', JSON.stringify(updatedShopProducts));
-            console.log('Shop products updated successfully');
-          }
-        } catch (error) {
-          console.error('Error updating shop products:', error);
-        }
+        // Refresh products list to ensure we have the latest data
+        loadProducts();
         
         resetForm();
         setIsEditingProduct(false);
@@ -368,12 +352,13 @@ const SellerDashboard = () => {
         
         // Update the local products state to reflect the deletion
         setProducts(prevProducts => {
-          const updated = prevProducts.filter(product => 
-            product.id !== productId && product._id !== productId
+          return prevProducts.filter(product => 
+            (product.id !== productId) && (product._id !== productId)
           );
-          console.log('Updated products count:', updated.length);
-          return updated;
         });
+        
+        // Refresh products from localStorage to ensure consistency
+        loadProducts();
         
         setSuccess('Product deleted successfully');
         
