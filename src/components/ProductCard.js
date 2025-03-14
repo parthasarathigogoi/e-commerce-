@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaShoppingCart, FaHeart, FaEye, FaEllipsisV, FaShare, FaInfoCircle, FaTag, FaShippingFast } from 'react-icons/fa';
 import { useCart } from '../context/CartContext';
 import './ProductCard.css';
 
 const ProductCard = ({ product }) => {
-  const { addToCart } = useCart();
+  const { addToCart, cartItems, getProductStock } = useCart();
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
+  const [availableStock, setAvailableStock] = useState(0);
+  const [notification, setNotification] = useState({show: false, message: '', type: ''});
+  
+  // Update available stock when cart items or product changes
+  useEffect(() => {
+    const stock = getProductStock(product._id || product.id);
+    setAvailableStock(stock);
+  }, [cartItems, product, getProductStock]);
   
   // Format price with currency symbol
   const formatPrice = (price) => {
@@ -18,6 +26,22 @@ const ProductCard = ({ product }) => {
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    // Check if product is in stock
+    if (availableStock <= 0) {
+      setNotification({
+        show: true,
+        message: 'This product is out of stock',
+        type: 'error'
+      });
+      
+      // Hide notification after 3 seconds
+      setTimeout(() => {
+        setNotification({show: false, message: '', type: ''});
+      }, 3000);
+      
+      return;
+    }
     
     // Map the product data to match the expected format
     const cartProduct = {
@@ -31,7 +55,27 @@ const ProductCard = ({ product }) => {
       category: product.category || 'Uncategorized'
     };
     
-    addToCart(cartProduct);
+    // Add to cart with inventory check
+    const result = addToCart(cartProduct);
+    
+    if (result.success) {
+      setNotification({
+        show: true,
+        message: 'Added to cart successfully',
+        type: 'success'
+      });
+    } else {
+      setNotification({
+        show: true,
+        message: result.message || 'Failed to add to cart',
+        type: 'error'
+      });
+    }
+    
+    // Hide notification after 3 seconds
+    setTimeout(() => {
+      setNotification({show: false, message: '', type: ''});
+    }, 3000);
   };
   
   // Handle view product details
@@ -66,15 +110,20 @@ const ProductCard = ({ product }) => {
     return `${product.category || 'Premium'} product`;
   };
   
+  // Check if product is out of stock
+  const isOutOfStock = availableStock <= 0;
+  
   return (
     <Link to={`/product/${product._id || product.id}`} className="product-card-link">
       <div className={`product-card ${product.isTrending ? 'premium-card' : ''}`}>
         {/* Product badges */}
-        {product.isNew && <div className="product-badge new-badge">New</div>}
-        {product.isTrending && <div className="product-badge trending-badge">Trend</div>}
-        {product.discount > 0 && (
-          <div className="product-badge discount-badge">-{product.discount}%</div>
-        )}
+        <div className="product-badges">
+          {product.isNew && <div className="product-badge new">New</div>}
+          {product.isTrending && <div className="product-badge trending">Trend</div>}
+          {product.discount > 0 && (
+            <div className="product-badge discount">-{product.discount}%</div>
+          )}
+        </div>
         
         {/* Product image */}
         <div className="product-image-container">
@@ -84,6 +133,13 @@ const ProductCard = ({ product }) => {
             className="product-image"
             loading="lazy"
           />
+          
+          {/* Out of stock overlay */}
+          {isOutOfStock && (
+            <div className="out-of-stock-overlay">
+              <span>Out of Stock</span>
+            </div>
+          )}
           
           {/* Product actions */}
           <div className="product-actions">
@@ -146,8 +202,8 @@ const ProductCard = ({ product }) => {
           
           {/* Availability indicator */}
           <div className="product-availability">
-            <span className={product.inStock ? 'in-stock' : 'out-of-stock'}>
-              {product.inStock ? 'In Stock' : 'Out of Stock'}
+            <span className={isOutOfStock ? 'out-of-stock' : 'in-stock'}>
+              {isOutOfStock ? 'Out of Stock' : `In Stock (${availableStock})`}
             </span>
           </div>
           
@@ -155,10 +211,17 @@ const ProductCard = ({ product }) => {
           <button 
             className="add-to-cart-btn"
             onClick={handleAddToCart}
-            disabled={!product.inStock}
+            disabled={isOutOfStock}
           >
-            <FaShoppingCart /> ADD TO CART
+            <FaShoppingCart /> {isOutOfStock ? 'OUT OF STOCK' : 'ADD TO CART'}
           </button>
+          
+          {/* Notification */}
+          {notification.show && (
+            <div className={`product-notification ${notification.type}`}>
+              {notification.message}
+            </div>
+          )}
         </div>
         
         {/* Product menu */}

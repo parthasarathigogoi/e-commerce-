@@ -38,36 +38,53 @@ const SellerDashboard = () => {
     navigate('/');
   };
 
-  // Check if seller is authenticated
+  // Component did mount - check authentication
   useEffect(() => {
-    if (!isSellerAuthenticated) {
-      navigate('/seller/login');
+    // Check if user is logged in but not as a seller
+    const userToken = localStorage.getItem('token');
+    const sellerToken = localStorage.getItem('sellerToken');
+    
+    if (userToken && !sellerToken) {
+      // User is logged in as a regular user, redirect to home
+      navigate('/');
+      return;
     }
+    
+    if (!isSellerAuthenticated) {
+      // Not authenticated as a seller, redirect to seller login
+      navigate('/seller/login');
+      return;
+    }
+    
+    // Load products if authenticated
+    loadProducts();
   }, [isSellerAuthenticated, navigate]);
 
-  // Load seller products
-  useEffect(() => {
-    const loadProducts = async () => {
-      setLoading(true);
-      try {
-        const result = getSellerProducts();
-        if (result.success && Array.isArray(result.products)) {
-          setProducts(result.products);
+  // Function to load products
+  const loadProducts = async () => {
+    setLoading(true);
+    try {
+      // Get products directly from localStorage to ensure we have the latest data
+      const storedProducts = localStorage.getItem('sellerProducts');
+      if (storedProducts) {
+        const parsedProducts = JSON.parse(storedProducts);
+        if (Array.isArray(parsedProducts)) {
+          setProducts(parsedProducts);
         } else {
-          // Initialize with empty array if no products or invalid response
           setProducts([]);
         }
-      } catch (err) {
-        console.error('Error loading products:', err);
-        setError('Failed to load products');
+      } else {
         setProducts([]);
-      } finally {
-        setLoading(false);
       }
-    };
-    
-    loadProducts();
-  }, [getSellerProducts]);
+      setError('');
+    } catch (err) {
+      console.error('Error loading products:', err);
+      setError('Failed to load products');
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Use sellerProducts from context when it changes
   useEffect(() => {
@@ -146,6 +163,13 @@ const SellerDashboard = () => {
       return;
     }
 
+    // Validate stock is a positive number
+    const stockQuantity = parseInt(formData.stock);
+    if (isNaN(stockQuantity) || stockQuantity < 0) {
+      setError('Stock quantity must be a positive number');
+      return;
+    }
+
     try {
       // Create new product object
       const newProduct = {
@@ -153,22 +177,62 @@ const SellerDashboard = () => {
         price: parseFloat(formData.price),
         description: formData.description,
         category: formData.category,
-        stock: parseInt(formData.stock),
+        stock: stockQuantity,
         image: formData.imagePreview || '/images/placeholder.jpg', // Use placeholder if no image
         isNew: formData.isNew,
         isTrending: formData.isTrending,
         discount: parseInt(formData.discount) || 0,
-        inStock: parseInt(formData.stock) > 0
+        inStock: stockQuantity > 0 // Explicitly set inStock based on stock quantity
       };
+
+      console.log('Submitting new product:', newProduct);
 
       // Add product
       const result = addProduct(newProduct);
       
       if (result.success) {
-        setSuccess('Product added successfully');
-        resetForm();
-        setIsAddingProduct(false);
+        console.log('Product added successfully:', result.product);
+        
+        // Reset form fields but stay in add product mode
+        setFormData({
+          name: '',
+          price: '',
+          description: '',
+          category: '',
+          stock: '',
+          image: null,
+          imagePreview: null,
+          isNew: false,
+          isTrending: false,
+          discount: '0'
+        });
+        
+        // Update the products list with the newly added product
+        if (result.product) {
+          setProducts(prevProducts => [...prevProducts, result.product]);
+        } else {
+          // If result.product is not available, refresh from localStorage
+          try {
+            const storedProducts = localStorage.getItem('sellerProducts');
+            if (storedProducts) {
+              const parsedProducts = JSON.parse(storedProducts);
+              if (Array.isArray(parsedProducts)) {
+                setProducts(parsedProducts);
+              }
+            }
+          } catch (err) {
+            console.error('Error refreshing products:', err);
+          }
+        }
+        
+        setSuccess('Product added successfully! You can add another product or go back.');
+        
+        // Show success message for 3 seconds
+        setTimeout(() => {
+          setSuccess('');
+        }, 3000);
       } else {
+        console.error('Failed to add product:', result.error);
         setError(result.error || 'Failed to add product');
       }
     } catch (err) {
@@ -207,6 +271,13 @@ const SellerDashboard = () => {
       return;
     }
 
+    // Validate stock is a positive number
+    const stockQuantity = parseInt(formData.stock);
+    if (isNaN(stockQuantity) || stockQuantity < 0) {
+      setError('Stock quantity must be a positive number');
+      return;
+    }
+
     try {
       // Create updated product object
       const updatedProduct = {
@@ -215,22 +286,44 @@ const SellerDashboard = () => {
         price: parseFloat(formData.price),
         description: formData.description,
         category: formData.category,
-        stock: parseInt(formData.stock),
+        stock: stockQuantity,
         image: formData.imagePreview || currentProduct.image,
         isNew: formData.isNew,
         isTrending: formData.isTrending,
         discount: parseInt(formData.discount) || 0,
-        inStock: parseInt(formData.stock) > 0
+        inStock: stockQuantity > 0 // Explicitly set inStock based on stock quantity
       };
+
+      console.log('Updating product:', updatedProduct);
 
       // Update product
       const result = updateProduct(currentProduct.id, updatedProduct);
       
       if (result.success) {
+        console.log('Product updated successfully');
         setSuccess('Product updated successfully');
+        
+        // Also update shop products to ensure consistency
+        try {
+          const shopProducts = JSON.parse(localStorage.getItem('shopProducts')) || [];
+          const productIndex = shopProducts.findIndex(p => 
+            (p.id === currentProduct.id) || (p._id === currentProduct.id)
+          );
+          
+          if (productIndex >= 0) {
+            const updatedShopProducts = [...shopProducts];
+            updatedShopProducts[productIndex] = updatedProduct;
+            localStorage.setItem('shopProducts', JSON.stringify(updatedShopProducts));
+            console.log('Shop products updated successfully');
+          }
+        } catch (error) {
+          console.error('Error updating shop products:', error);
+        }
+        
         resetForm();
         setIsEditingProduct(false);
       } else {
+        console.error('Failed to update product:', result.error);
         setError(result.error || 'Failed to update product');
       }
     } catch (err) {
@@ -241,20 +334,47 @@ const SellerDashboard = () => {
 
   // Handle delete product
   const handleDeleteClick = (product) => {
+    console.log('Delete clicked for product:', product.name, 'ID:', product.id || product._id);
     setProductToDelete(product);
     setShowDeleteModal(true);
   };
 
   // Confirm delete product
   const confirmDelete = async () => {
-    if (!productToDelete) return;
+    if (!productToDelete) {
+      console.error('No product to delete');
+      setShowDeleteModal(false);
+      return;
+    }
     
     try {
-      const result = deleteProduct(productToDelete.id);
+      // Get the product ID, handling both id and _id properties
+      const productId = productToDelete.id || productToDelete._id;
+      
+      console.log('Confirming delete for product:', productId);
+      
+      if (!productId) {
+        setError('Invalid product ID');
+        setShowDeleteModal(false);
+        setProductToDelete(null);
+        return;
+      }
+      
+      // Call the delete function from context
+      const result = deleteProduct(productId);
       
       if (result.success) {
+        console.log('Delete successful, updating UI');
+        
         // Update the local products state to reflect the deletion
-        setProducts(prevProducts => prevProducts.filter(product => product.id !== productToDelete.id));
+        setProducts(prevProducts => {
+          const updated = prevProducts.filter(product => 
+            product.id !== productId && product._id !== productId
+          );
+          console.log('Updated products count:', updated.length);
+          return updated;
+        });
+        
         setSuccess('Product deleted successfully');
         
         // Show success message for 3 seconds
@@ -262,6 +382,7 @@ const SellerDashboard = () => {
           setSuccess('');
         }, 3000);
       } else {
+        console.error('Delete failed:', result.error);
         setError(result.error || 'Failed to delete product');
       }
     } catch (err) {
@@ -298,24 +419,12 @@ const SellerDashboard = () => {
     }));
   };
 
-  // Categories options
+  // Categories options - limited to specified categories only
   const categories = [
-    'Electronics',
-    'Clothing',
-    'Accessories',
-    'Home & Kitchen',
-    'Beauty',
-    'Books',
-    'Toys',
-    'Sports',
-    'Automotive',
-    'Health',
-    'Jewelry',
     'Watches',
-    'Shoes',
+    'Clothing',
     'Perfumes',
-    'Belts',
-    'Other'
+    'Belts'
   ];
 
   return (
@@ -702,18 +811,18 @@ const SellerDashboard = () => {
                   <table className="products-table">
                     <thead>
                       <tr>
-                        <th>Image</th>
+                        <th width="70">Image</th>
                         <th>Name</th>
-                        <th>Price</th>
-                        <th>Category</th>
-                        <th>Stock</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th width="100">Price</th>
+                        <th width="120">Category</th>
+                        <th width="70">Stock</th>
+                        <th width="100">Status</th>
+                        <th width="170">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {products.map((product) => (
-                        <tr key={product.id}>
+                        <tr key={product.id || product._id}>
                           <td>
                             <div className="product-image">
                               {product.image ? (
@@ -725,7 +834,7 @@ const SellerDashboard = () => {
                               )}
                             </div>
                           </td>
-                          <td>{product.name}</td>
+                          <td className="product-name-cell">{product.name}</td>
                           <td>{formatPrice(product.price)}</td>
                           <td>{product.category || 'N/A'}</td>
                           <td>{product.stock}</td>
@@ -738,14 +847,20 @@ const SellerDashboard = () => {
                             <div className="product-actions">
                               <button
                                 className="edit-btn"
-                                onClick={() => handleEditClick(product)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleEditClick(product);
+                                }}
                                 title="Edit Product"
                               >
                                 <FaEdit /> <span>Edit</span>
                               </button>
                               <button
                                 className="delete-btn"
-                                onClick={() => handleDeleteClick(product)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteClick(product);
+                                }}
                                 title="Delete Product"
                               >
                                 <FaTrash /> <span>Delete</span>

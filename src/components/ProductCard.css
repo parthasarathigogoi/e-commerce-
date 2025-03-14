@@ -9,12 +9,15 @@
 .product-card {
   width: 300px;
   height: 400px;
-  position: relative;
+  background: white;
   border-radius: 10px;
-  overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 15px;
-  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin: 0 15px 25px 15px;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-card:hover {
@@ -41,48 +44,88 @@
 /* Product Badges */
 .product-badges {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  pointer-events: none;
 }
 
 .product-badge {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: #d4af37;
+  display: block;
+  padding: 6px 16px 6px 10px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
   color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 1rem;
-  z-index: 1;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+  min-width: 80px;
+  text-align: center;
+  transition: none;
+  transform: none;
+}
+
+/* Disable any 3D effect */
+.product-badge::after {
+  content: none;
 }
 
 .product-badge.new {
-  background-color: #4CAF50;
+  top: 12px;
+  left: 0;
+  background-color: #4a6741;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  padding: 6px 15px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 
 .product-badge.trending {
-  background-color: #f44336;
+  top: 45px;
+  left: 0;
+  background-color: #000000;
+  color: #ffffff;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  padding: 6px 15px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  font-weight: 700;
 }
 
 .product-badge.discount {
-  background-color: #ff9800;
+  top: 12px;
+  right: 0;
+  left: auto;
+  background-color: #d04e4e;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 5% 100%);
+  padding: 6px 10px 6px 16px;
+  transition: none;
+  transform: none;
+}
+
+/* Make sure all badges remain static on all interactions */
+.product-card:hover .product-badge,
+.product-card:hover .product-badge.new,
+.product-card:hover .product-badge.trending,
+.product-card:hover .product-badge.discount {
+  transform: none;
+  transition: none;
 }
 
 /* Product Image */
 .product-image-container {
   width: 100%;
-  height: 100%;
+  height: 240px;
+  background-color: #ffffff;
   position: relative;
+  overflow: hidden;
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .product-image {
@@ -90,6 +133,18 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+/* Remove the previous img fix that was causing issues */
+.product-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Product Actions */
@@ -99,25 +154,26 @@
   right: 10px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  z-index: 2;
+  gap: 8px;
+  z-index: 1;
 }
 
 .action-icon {
   width: 35px;
   height: 35px;
-  border-radius: 50%;
   background: white;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .action-icon:hover {
-  background: #f5f5f5;
+  background: #4a6741;
+  color: white;
   transform: scale(1.1);
 }
 
@@ -135,33 +191,35 @@
 
 /* Product Details */
 .product-details {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
   padding: 20px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%);
-  color: white;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: white;
 }
 
 .product-title {
-  font-size: 1.4em;
+  font-size: 1.4rem;
   font-weight: 600;
-  margin-bottom: 8px;
-  color: white;
+  color: #222;
+  margin-bottom: 10px;
+  line-height: 1.3;
 }
 
-.product-description {
-  font-size: 0.9em;
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 12px;
+.product-description,
+.product-category {
+  font-size: 1rem;
+  color: #777;
+  margin-bottom: 8px;
+  line-height: 1.5;
 }
 
 .product-price {
-  font-size: 1.1em;
+  font-size: 1.2rem;
   font-weight: 600;
-  color: #333;
-  margin-bottom: 12px;
+  color: #4a6741;
+  margin-bottom: 15px;
 }
 
 .current-price {
@@ -228,20 +286,20 @@
 .add-to-cart-btn {
   width: 90%;
   height: 40px;
-  background-color: #1a1a1a;
+  background: #4a6741;
   color: white;
   border: none;
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 10px;
+  margin: 0 auto;
 }
 
 .add-to-cart-btn:hover {
-  background-color: #333;
-  transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background: #3a5233;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .add-to-cart-btn:disabled {
@@ -255,37 +313,42 @@
 /* Product Menu */
 .product-menu {
   position: absolute;
-  top: 50%;
+  top: 50px;
   right: 10px;
-  transform: translateY(-50%);
   background: white;
-  border-radius: 5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 5px;
-  z-index: 3;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  z-index: 2;
   display: none;
 }
 
-.product-card:hover .product-menu {
+.product-menu.active {
   display: block;
 }
 
 .menu-item {
-  padding: 8px 12px;
+  padding: 8px 15px;
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
+  border-radius: 4px;
 }
 
 .menu-item:hover {
   background-color: #f5f5f5;
 }
 
-.menu-item i {
-  font-size: 1.1em;
+.menu-item svg {
+  font-size: 1.1rem;
   color: #666;
+}
+
+.menu-item span {
+  font-size: 0.9rem;
+  color: #333;
 }
 
 .availability-indicator {
@@ -324,27 +387,110 @@
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 480px) {
   .product-card {
-    width: 200px;
-    height: 266px;
+    max-width: 100%;
   }
   
-  .product-details {
-    padding: 10px;
+  .product-image-container {
+    height: 180px;
   }
   
   .product-title {
-    font-size: 1em;
+    font-size: 1rem;
   }
   
-  .add-to-cart-btn {
-    height: 32px;
-    font-size: 0.85em;
+  .product-description {
+    font-size: 0.85rem;
   }
   
-  .action-icon {
-    width: 30px;
-    height: 30px;
+  .product-price {
+    font-size: 1.1rem;
+  }
+}
+
+/* Out of Stock Overlay */
+.out-of-stock-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.out-of-stock-overlay span {
+  background-color: #d04e4e;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Availability Indicator */
+.product-availability {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.in-stock {
+  color: #4a6741;
+}
+
+.out-of-stock {
+  color: #d04e4e;
+  font-weight: 600;
+}
+
+/* Add to Cart Button - Out of Stock */
+.add-to-cart-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.8;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Notification */
+.product-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: white;
+  font-weight: 500;
+  z-index: 1000;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.product-notification.success {
+  background-color: #4a6741;
+}
+
+.product-notification.error {
+  background-color: #d04e4e;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 } 
