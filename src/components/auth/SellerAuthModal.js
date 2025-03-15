@@ -1,49 +1,38 @@
 import React, { useState } from 'react';
-import { FaTimes, FaStore, FaUser, FaLock, FaEnvelope, FaPhone, FaBuilding } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaTimes, FaUser, FaStore, FaPhone } from 'react-icons/fa';
 import { useSeller } from '../../context/SellerContext';
-import './AuthModal.css';
+import './SellerAuthModal.css';
 
 const SellerAuthModal = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { loginSeller, registerSeller } = useSeller();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
+    storeName: '',
     password: '',
-    shopName: '',
-    phone: ''
+    confirmPassword: ''
   });
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState('');
-  const [submitSuccess, setSubmitSuccess] = useState('');
 
-  const { handleSellerLogin, registerSeller } = useSeller();
-
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!isLogin && !formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    
-    if (!isLogin && !formData.shopName.trim()) {
-      newErrors.shopName = 'Shop name is required';
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      storeName: '',
+      password: '',
+      confirmPassword: ''
+    });
+    setError('');
+    setSuccess('');
   };
 
   const handleChange = (e) => {
@@ -52,209 +41,241 @@ const SellerAuthModal = ({ isOpen, onClose }) => {
       ...prev,
       [name]: value
     }));
-    
-    // Clear error when user types
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
-    
-    // Clear submit messages
-    setSubmitError('');
-    setSubmitSuccess('');
+    setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    // Check if customer is logged in
+    const customerToken = localStorage.getItem('token');
+    if (customerToken) {
+      // Log out customer before proceeding
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
     }
-    
-    setIsSubmitting(true);
-    setSubmitError('');
-    setSubmitSuccess('');
-    
+
+    if (!isLogin) {
+      // Validation for registration
+      if (formData.password !== formData.confirmPassword) {
+        setError('Passwords do not match');
+        setLoading(false);
+        return;
+      }
+
+      if (formData.password.length < 6) {
+        setError('Password must be at least 6 characters');
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.name || !formData.email || !formData.phone || !formData.storeName) {
+        setError('All fields are required');
+        setLoading(false);
+        return;
+      }
+    }
+
     try {
       if (isLogin) {
-        // Handle login
-        const result = await handleSellerLogin(formData.email, formData.password);
+        // Login logic
+        const result = await loginSeller(formData.email, formData.password);
         
         if (result.success) {
-          setSubmitSuccess('Login successful!');
-          setTimeout(() => {
-            onClose();
-          }, 1000);
+          onClose();
+          resetForm();
+          // Redirect to seller dashboard
+          navigate('/seller/dashboard');
         } else {
-          setSubmitError(result.error || 'Login failed. Please try again.');
+          setError(result.error || 'Login failed');
         }
       } else {
-        // Handle registration
+        // Registration logic
         const result = await registerSeller(
           formData.name,
           formData.email,
           formData.password,
-          formData.shopName,
+          formData.storeName,
           formData.phone
         );
         
         if (result.success) {
-          setSubmitSuccess('Registration successful!');
+          setSuccess('Registration successful! Redirecting to dashboard...');
           setTimeout(() => {
             onClose();
-          }, 1000);
+            navigate('/seller/dashboard');
+          }, 1500);
         } else {
-          setSubmitError(result.error || 'Registration failed. Please try again.');
+          setError(result.error || 'Registration failed');
         }
       }
-    } catch (error) {
-      console.error('Auth error:', error);
-      setSubmitError('An unexpected error occurred. Please try again.');
+    } catch (err) {
+      setError(err.message || 'Authentication failed');
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
-  };
-
-  const toggleAuthMode = () => {
-    setIsLogin(!isLogin);
-    setErrors({});
-    setSubmitError('');
-    setSubmitSuccess('');
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="auth-modal-overlay">
-      <div className="auth-modal">
-        <button className="close-button" onClick={onClose}>
+    <div className="auth-modal-overlay" onClick={onClose}>
+      <div className="auth-modal seller-auth-modal" onClick={e => e.stopPropagation()}>
+        <button className="close-modal" onClick={onClose}>
           <FaTimes />
         </button>
         
         <div className="auth-header">
-          <FaStore className="auth-icon" />
+          <div className="seller-icon">
+            <FaStore />
+          </div>
           <h2>{isLogin ? 'Seller Login' : 'Become a Seller'}</h2>
+          <p>{isLogin ? 'Sign in to manage your products' : 'Create your seller account to start selling'}</p>
         </div>
-        
-        {submitError && (
-          <div className="auth-error-message">
-            {submitError}
-          </div>
-        )}
-        
-        {submitSuccess && (
-          <div className="auth-success-message">
-            {submitSuccess}
-          </div>
-        )}
-        
-        <form onSubmit={handleSubmit}>
+
+        <div className="auth-tabs">
+          <button 
+            className={`auth-tab ${isLogin ? 'active' : ''}`}
+            onClick={() => {
+              setIsLogin(true);
+              setError('');
+              setSuccess('');
+              resetForm();
+            }}
+          >
+            Login
+          </button>
+          <button 
+            className={`auth-tab ${!isLogin ? 'active' : ''}`}
+            onClick={() => {
+              setIsLogin(false);
+              setError('');
+              setSuccess('');
+              resetForm();
+            }}
+          >
+            Register
+          </button>
+        </div>
+
+        {error && <div className="auth-error">{error}</div>}
+        {success && <div className="auth-success">{success}</div>}
+
+        <form onSubmit={handleSubmit} className="auth-form">
           {!isLogin && (
-            <div className="form-group">
-              <label>
-                <FaUser className="input-icon" />
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Full Name"
-                  value={formData.name}
-                  onChange={handleChange}
-                />
-              </label>
-              {errors.name && <span className="error-text">{errors.name}</span>}
-            </div>
+            <>
+              <div className="form-group">
+                <div className="input-group">
+                  <FaUser className="input-icon" />
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Full Name"
+                    required={!isLogin}
+                    className="form-input"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <div className="input-group">
+                  <FaStore className="input-icon" />
+                  <input
+                    type="text"
+                    name="storeName"
+                    value={formData.storeName}
+                    onChange={handleChange}
+                    placeholder="Store Name"
+                    required={!isLogin}
+                    className="form-input"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <div className="input-group">
+                  <FaPhone className="input-icon" />
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="Phone Number"
+                    required={!isLogin}
+                    className="form-input"
+                  />
+                </div>
+              </div>
+            </>
           )}
-          
+
           <div className="form-group">
-            <label>
+            <div className="input-group">
               <FaEnvelope className="input-icon" />
               <input
                 type="email"
                 name="email"
-                placeholder="Email Address"
                 value={formData.email}
                 onChange={handleChange}
+                placeholder="Email"
+                required
+                className="form-input"
               />
-            </label>
-            {errors.email && <span className="error-text">{errors.email}</span>}
+            </div>
           </div>
-          
+
           <div className="form-group">
-            <label>
+            <div className="input-group">
               <FaLock className="input-icon" />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
-                placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
+                placeholder="Password"
+                required
+                className="form-input"
               />
-            </label>
-            {errors.password && <span className="error-text">{errors.password}</span>}
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </div>
-          
+
           {!isLogin && (
-            <>
-              <div className="form-group">
-                <label>
-                  <FaBuilding className="input-icon" />
-                  <input
-                    type="text"
-                    name="shopName"
-                    placeholder="Shop Name"
-                    value={formData.shopName}
-                    onChange={handleChange}
-                  />
-                </label>
-                {errors.shopName && <span className="error-text">{errors.shopName}</span>}
+            <div className="form-group">
+              <div className="input-group">
+                <FaLock className="input-icon" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm Password"
+                  required={!isLogin}
+                  className="form-input"
+                />
               </div>
-              
-              <div className="form-group">
-                <label>
-                  <FaPhone className="input-icon" />
-                  <input
-                    type="text"
-                    name="phone"
-                    placeholder="Phone Number (Optional)"
-                    value={formData.phone}
-                    onChange={handleChange}
-                  />
-                </label>
-              </div>
-            </>
+            </div>
           )}
-          
+
           <button 
             type="submit" 
-            className="auth-submit-button"
-            disabled={isSubmitting}
+            className="auth-button seller-auth-button"
+            disabled={loading}
           >
-            {isSubmitting 
-              ? 'Processing...' 
-              : isLogin 
-                ? 'Login' 
-                : 'Register'
-            }
+            {loading ? (isLogin ? 'Signing in...' : 'Creating Account...') : (isLogin ? 'Sign In' : 'Create Account')}
           </button>
         </form>
-        
-        <div className="auth-footer">
-          <p>
-            {isLogin 
-              ? "Don't have a seller account?" 
-              : "Already have a seller account?"
-            }
-            <button 
-              type="button"
-              className="toggle-auth-button"
-              onClick={toggleAuthMode}
-            >
-              {isLogin ? 'Register' : 'Login'}
-            </button>
-          </p>
-        </div>
       </div>
     </div>
   );

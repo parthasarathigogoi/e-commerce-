@@ -84,7 +84,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './header.css';
 import { FaSearch, FaShoppingCart, FaUser, FaCrown, FaStore, FaRobot, FaHandPaper } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../context/AuthContext';
+import { AuthContext } from '../../App';
 import { useSeller } from '../../context/SellerContext';
 import { useChatbot } from '../../context/ChatbotContext';
 import ProfileDropdown from './ProfileDropdown';
@@ -95,8 +95,8 @@ const Header = ({ onCartClick, onAuthClick, onSellerAuthClick, onLogoClick }) =>
   const [searchActive, setSearchActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const { cartQuantity } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { getCartCount } = useCart();
+  const { isAuthenticated } = useContext(AuthContext);
   const { isSellerAuthenticated } = useSeller();
   const { toggleChatbot } = useChatbot();
 
@@ -291,7 +291,7 @@ const Header = ({ onCartClick, onAuthClick, onSellerAuthClick, onLogoClick }) =>
           {/* Cart */}
           <button className="action-button cart-button" onClick={onCartClick}>
             <FaShoppingCart />
-            <span className="cart-badge">{cartQuantity}</span>
+            <span className="cart-badge">{getCartCount()}</span>
           </button>
         </div>
       </div>
