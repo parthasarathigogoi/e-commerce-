@@ -1,0 +1,357 @@
+.liked-products-container {
+  max-width: 1200px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f7fa;
+}
+
+.liked-products-header {
+  text-align: center;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.liked-products-header h1 {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.liked-products-header p {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.back-button {
+  position: absolute;
+  left: 0;
+  top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #3498db;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.back-button:hover {
+  color: #2980b9;
+}
+
+.liked-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  width: 100%;
+}
+
+.liked-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+.no-liked-products {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 50px auto;
+}
+
+.no-liked-products h2 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.no-liked-products p {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.swipe-more-button {
+  display: inline-block;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.swipe-more-button:hover {
+  background-color: #2980b9;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.liked-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+.liked-product-card {
+  background-color: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.liked-product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.liked-product-image {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.liked-remove-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #e74c3c;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0;
+  transform: scale(0.8);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.liked-product-card:hover .liked-remove-button {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.liked-remove-button:hover {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.liked-seller-badge {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background-color: #3498db;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  z-index: 2;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.liked-discount-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #ff6b6b;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  z-index: 2;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.liked-product-info {
+  padding: 20px;
+}
+
+.liked-product-info h3 {
+  margin: 0 0 10px;
+  font-size: 1.4rem;
+  color: #333;
+  line-height: 1.3;
+}
+
+.liked-price-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.liked-price {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.liked-original-price {
+  font-size: 1rem;
+  text-decoration: line-through;
+  color: #999;
+  margin-right: 10px;
+}
+
+.liked-discounted-price {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #ff6b6b;
+}
+
+.liked-product-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.liked-category, .liked-rating {
+  background-color: #f5f7fa;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.liked-rating {
+  color: #f39c12;
+  font-weight: 600;
+}
+
+.liked-product-description {
+  margin-bottom: 15px;
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.liked-product-tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.liked-tag {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.liked-new-tag {
+  background-color: #4caf50;
+  color: white;
+}
+
+.liked-trending-tag {
+  background-color: #ff9800;
+  color: white;
+}
+
+.liked-add-to-cart-button {
+  width: 100%;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.liked-add-to-cart-button:hover {
+  background-color: #2980b9;
+}
+
+.liked-notification {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 30px;
+  font-size: 1rem;
+  z-index: 1000;
+  transition: bottom 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.liked-notification.show {
+  bottom: 30px;
+}
+
+/* Animations */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .liked-products-header h1 {
+    font-size: 1.8rem;
+    margin-top: 40px;
+  }
+  
+  .liked-products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .liked-products-container {
+    padding: 15px;
+  }
+  
+  .liked-products-header h1 {
+    font-size: 1.6rem;
+  }
+  
+  .liked-products-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .liked-product-info h3 {
+    font-size: 1.3rem;
+  }
+  
+  .liked-price, .liked-discounted-price {
+    font-size: 1.2rem;
+  }
+} 

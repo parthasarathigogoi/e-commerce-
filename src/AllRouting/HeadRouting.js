@@ -9,6 +9,8 @@ import Contact from '../pages/Contact';
 import About from '../pages/About';
 import TestPage from '../pages/TestPage';
 import ProductDetail from '../pages/ProductDetail';
+import SwipeShop from '../pages/SwipeShop';
+import LikedProducts from '../pages/LikedProducts';
 
 function HeadRouting() {
   return (
@@ -22,6 +24,8 @@ function HeadRouting() {
           <Route path="/about" exact={true} element={<About/>} />
           <Route path="/test" exact={true} element={<TestPage/>} />
           <Route path="/product/:productId" element={<ProductDetail/>} />
+          <Route path="/swipe-shop" exact={true} element={<SwipeShop/>} />
+          <Route path="/liked-products" exact={true} element={<LikedProducts/>} />
     </Routes>
   )
 }

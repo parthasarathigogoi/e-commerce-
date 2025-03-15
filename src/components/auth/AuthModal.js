@@ -1,244 +1,203 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaTimes, FaUser } from 'react-icons/fa';
-import { AuthContext } from '../../App';
+import { useAuth } from '../../context/AuthContext';
 import './AuthModal.css';
 
 const AuthModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLoginMode, setIsLoginMode] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { setIsAuthenticated, setUser } = useContext(AuthContext);
+  const { login, register } = useAuth();
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    password: '',
-    confirmPassword: ''
+    password: ''
   });
+
+  if (!isOpen) return null;
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const resetForm = () => {
     setFormData({
       name: '',
       email: '',
-      password: '',
-      confirmPassword: ''
+      password: ''
     });
     setError('');
+    setLoading(false);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    setError('');
-  };
-
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    if (!isLogin && formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      setLoading(false);
+    
+    if (!formData.email || !formData.password) {
+      setError('Please fill in all fields');
       return;
     }
-
+    
     try {
-      const endpoint = isLogin ? '/api/login' : '/api/register';
-      const payload = isLogin 
-        ? { email: formData.email, password: formData.password }
-        : { name: formData.name, email: formData.email, password: formData.password };
-
-      // For demo purposes, simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      if (isLogin) {
-        // Log out seller if logged in
-        localStorage.removeItem('sellerToken');
-        localStorage.removeItem('sellerData');
-        
-        // Simulate successful login
-        localStorage.setItem('token', 'demo-token');
-        localStorage.setItem('userId', 'demo-user');
-        setIsAuthenticated(true);
-        setUser({ id: 'demo-user' });
+      setLoading(true);
+      setError('');
+      
+      const { success, message } = await login(formData.email, formData.password);
+      
+      if (success) {
         onClose();
         resetForm();
         // Redirect to homepage
         navigate('/');
       } else {
-        // Simulate successful registration
-        setIsLogin(true);
-        setFormData({
-          name: '',
-          email: formData.email,
-          password: '',
-          confirmPassword: ''
-        });
-        setError('Registration successful! Please log in.');
+        setError(message || 'Login failed. Please check your credentials.');
       }
-    } catch (err) {
-      setError(err.message || 'Authentication failed');
+    } catch (error) {
+      setError('An error occurred during login. Please try again.');
+      console.error('Login error:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  // For demo purposes
-  const handleDemoLogin = () => {
-    setLoading(true);
-    setTimeout(() => {
-      // Log out seller if logged in
-      localStorage.removeItem('sellerToken');
-      localStorage.removeItem('sellerData');
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    
+    if (!formData.name || !formData.email || !formData.password) {
+      setError('Please fill in all fields');
+      return;
+    }
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+    
+    // Basic password validation
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      setError('');
       
-      localStorage.setItem('token', 'demo-token');
-      localStorage.setItem('userId', 'demo-user');
-      setIsAuthenticated(true);
-      setUser({ id: 'demo-user' });
-      onClose();
-      resetForm();
+      const { success, message } = await register(formData.name, formData.email, formData.password);
+      
+      if (success) {
+        onClose();
+        resetForm();
+        navigate('/');
+      } else {
+        setError(message || 'Registration failed. Please try again.');
+      }
+    } catch (error) {
+      setError('An error occurred during registration. Please try again.');
+      console.error('Registration error:', error);
+    } finally {
       setLoading(false);
-      // Redirect to homepage
-      navigate('/');
-    }, 1000);
+    }
   };
-
-  if (!isOpen) return null;
 
   return (
     <div className="auth-modal-overlay" onClick={onClose}>
       <div className="auth-modal" onClick={e => e.stopPropagation()}>
-        <button className="close-modal" onClick={onClose}>
-          <FaTimes />
-        </button>
-        
         <div className="auth-header">
-          <h2>{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
-          <p>{isLogin ? 'Sign in to continue shopping' : 'Join our community of shoppers'}</p>
+          <h2>{isLoginMode ? 'Login' : 'Create Account'}</h2>
+          <button className="close-button" onClick={onClose}>
+            <FaTimes />
+          </button>
         </div>
-
+        
         <div className="auth-tabs">
           <button 
-            className={`auth-tab ${isLogin ? 'active' : ''}`}
-            onClick={() => {
-              setIsLogin(true);
-              setError('');
-              resetForm();
-            }}
+            className={`auth-tab ${isLoginMode ? 'active' : ''}`}
+            onClick={() => setIsLoginMode(true)}
           >
-            Sign In
+            Login
           </button>
           <button 
-            className={`auth-tab ${!isLogin ? 'active' : ''}`}
-            onClick={() => {
-              setIsLogin(false);
-              setError('');
-              resetForm();
-            }}
+            className={`auth-tab ${!isLoginMode ? 'active' : ''}`}
+            onClick={() => setIsLoginMode(false)}
           >
-            Sign Up
+            Register
           </button>
         </div>
-
-        {error && <div className="auth-error">{error}</div>}
-
-        <form onSubmit={handleSubmit} className="auth-form">
-          {!isLogin && (
+        
+        <form className="auth-form" onSubmit={isLoginMode ? handleLogin : handleRegister}>
+          {error && <div className="auth-error">{error}</div>}
+          
+          {!isLoginMode && (
             <div className="form-group">
-              <div className="input-group">
-                <FaUser className="input-icon" />
+              <div className="input-icon">
+                <FaUser className="icon" />
                 <input
                   type="text"
                   name="name"
+                  placeholder="Full Name"
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="Full Name"
-                  required={!isLogin}
-                  className="form-input"
                 />
               </div>
             </div>
           )}
-
+          
           <div className="form-group">
-            <div className="input-group">
-              <FaEnvelope className="input-icon" />
+            <div className="input-icon">
+              <FaEnvelope className="icon" />
               <input
                 type="email"
                 name="email"
+                placeholder="Email Address"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Email"
-                required
-                className="form-input"
               />
             </div>
           </div>
-
+          
           <div className="form-group">
-            <div className="input-group">
-              <FaLock className="input-icon" />
+            <div className="input-icon">
+              <FaLock className="icon" />
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
+                placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Password"
-                required
-                className="form-input"
               />
-              <button
+              <button 
                 type="button"
-                className="password-toggle"
+                className="toggle-password"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
           </div>
-
-          {!isLogin && (
-            <div className="form-group">
-              <div className="input-group">
-                <FaLock className="input-icon" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="Confirm Password"
-                  required={!isLogin}
-                  className="form-input"
-                />
-              </div>
+          
+          {isLoginMode && (
+            <div className="forgot-password">
+              <a href="#forgot-password">Forgot Password?</a>
             </div>
           )}
-
+          
           <button 
             type="submit" 
             className="auth-button"
             disabled={loading}
           >
-            {loading ? (isLogin ? 'Signing in...' : 'Creating Account...') : (isLogin ? 'Sign In' : 'Create Account')}
+            {loading ? 'Processing...' : isLoginMode ? 'Login' : 'Create Account'}
           </button>
-
-          {isLogin && (
-            <button 
-              type="button" 
-              className="demo-button"
-              onClick={handleDemoLogin}
-              disabled={loading}
-            >
-              Demo Login
-            </button>
-          )}
         </form>
       </div>
     </div>

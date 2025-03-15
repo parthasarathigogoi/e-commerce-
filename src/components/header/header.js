@@ -82,21 +82,23 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './header.css';
-import { FaSearch, FaShoppingCart, FaUser, FaCrown, FaStore } from 'react-icons/fa';
+import { FaSearch, FaShoppingCart, FaUser, FaCrown, FaStore, FaRobot, FaHandPaper } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
-import { AuthContext } from '../../App';
+import { useAuth } from '../../context/AuthContext';
 import { useSeller } from '../../context/SellerContext';
+import { useChatbot } from '../../context/ChatbotContext';
 import ProfileDropdown from './ProfileDropdown';
 
-const Header = ({ onCartClick, onAuthClick, onSellerAuthClick }) => {
+const Header = ({ onCartClick, onAuthClick, onSellerAuthClick, onLogoClick }) => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchActive, setSearchActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const { getCartCount } = useCart();
-  const { isAuthenticated } = useContext(AuthContext);
+  const { cartQuantity } = useCart();
+  const { isAuthenticated } = useAuth();
   const { isSellerAuthenticated } = useSeller();
+  const { toggleChatbot } = useChatbot();
 
   // Handle scroll event to change header style
   useEffect(() => {
@@ -170,18 +172,24 @@ const Header = ({ onCartClick, onAuthClick, onSellerAuthClick }) => {
     }
   };
 
+  // Handle chatbot click
+  const handleChatbotClick = (e) => {
+    e.stopPropagation();
+    toggleChatbot();
+  };
+
   return (
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="header-container">
         {/* Logo */}
-        <Link to="/" className="logo">
+        <div className="logo" onClick={onLogoClick} style={{ cursor: 'pointer' }}>
           <div className="logo-icon">
             <FaCrown className="crown-icon" />
           </div>
           <span className="logo-text">
             <span className="logo-elegant">DIKHOW</span>
           </span>
-        </Link>
+        </div>
 
         {/* Desktop Navigation */}
         <nav className="nav-menu">
@@ -194,6 +202,11 @@ const Header = ({ onCartClick, onAuthClick, onSellerAuthClick }) => {
             <li className="nav-item">
               <Link to="/shop" className="nav-link">
                 Shop
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/swipe-shop" className="nav-link swipe-link">
+                <FaHandPaper className="swipe-icon" /> Swipe Shop
               </Link>
             </li>
             <li className="nav-item">
@@ -237,7 +250,16 @@ const Header = ({ onCartClick, onAuthClick, onSellerAuthClick }) => {
             </form>
           </div>
 
-          {/* Seller Button */}
+          {/* Chatbot Button */}
+          <button 
+            className="action-button chatbot-button"
+            onClick={handleChatbotClick}
+            title="Chat with Assistant"
+          >
+            <FaRobot />
+          </button>
+
+          {/* Seller Button - Always show when not authenticated as a user */}
           {!isAuthenticated && (
             <button 
               className={`action-button seller-button ${isSellerAuthenticated ? 'seller-active' : ''}`}
@@ -269,7 +291,7 @@ const Header = ({ onCartClick, onAuthClick, onSellerAuthClick }) => {
           {/* Cart */}
           <button className="action-button cart-button" onClick={onCartClick}>
             <FaShoppingCart />
-            <span className="cart-badge">{getCartCount()}</span>
+            <span className="cart-badge">{cartQuantity}</span>
           </button>
         </div>
       </div>

@@ -1,0 +1,528 @@
+.swipe-shop-container {
+  max-width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.swipe-shop-header {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.swipe-shop-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.swipe-shop-header p {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.swipe-card-container {
+  width: 90%;
+  max-width: 400px;
+  height: 500px;
+  position: relative;
+  margin: 0 auto;
+}
+
+.simple-card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.simple-card:hover {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.simple-card.swipe-left {
+  animation: swipeLeft 0.3s forwards;
+}
+
+.simple-card.swipe-right {
+  animation: swipeRight 0.3s forwards;
+}
+
+@keyframes swipeLeft {
+  to {
+    transform: translateX(-150%) rotate(-20deg);
+    opacity: 0;
+  }
+}
+
+@keyframes swipeRight {
+  to {
+    transform: translateX(150%) rotate(20deg);
+    opacity: 0;
+  }
+}
+
+.card-content {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 16px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: all 0.3s ease;
+}
+
+.card-content::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  border-radius: 0 0 16px 16px;
+}
+
+.card-content.show-details::before {
+  height: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.5));
+}
+
+.card-info {
+  position: relative;
+  padding: 20px;
+  color: white;
+  z-index: 1;
+}
+
+.card-info h2 {
+  margin: 0 0 10px;
+  font-size: 1.8rem;
+  font-weight: 600;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.price-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.original-price {
+  font-size: 1.1rem;
+  text-decoration: line-through;
+  color: #ccc;
+  margin-right: 10px;
+}
+
+.discounted-price {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #ff6b6b;
+}
+
+.product-details {
+  margin-top: 15px;
+  animation: fadeIn 0.3s ease;
+}
+
+.product-description {
+  margin-bottom: 15px;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.product-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.category, .rating {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  margin-right: 8px;
+  font-weight: 600;
+}
+
+.new-tag {
+  background-color: #4caf50;
+  color: white;
+}
+
+.trending-tag {
+  background-color: #ff9800;
+  color: white;
+}
+
+.seller-badge {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background-color: #3498db;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  z-index: 2;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.discount-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #ff6b6b;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  z-index: 2;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.swipe-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.swipe-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 10px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  font-size: 1.5rem;
+}
+
+.swipe-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.swipe-button:active {
+  transform: translateY(0);
+}
+
+.swipe-button.dislike {
+  background-color: white;
+  color: #ff6b6b;
+}
+
+.swipe-button.dislike:hover {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.swipe-button.like {
+  background-color: white;
+  color: #4caf50;
+}
+
+.swipe-button.like:hover {
+  background-color: #4caf50;
+  color: white;
+}
+
+.swipe-button.info {
+  background-color: white;
+  color: #3498db;
+  font-size: 1.3rem;
+}
+
+.swipe-button.info:hover {
+  background-color: #3498db;
+  color: white;
+}
+
+.swipe-button.undo {
+  background-color: white;
+  color: #ff9800;
+  font-size: 1.2rem;
+}
+
+.swipe-button.undo:hover {
+  background-color: #ff9800;
+  color: white;
+}
+
+.swipe-button.cart {
+  background-color: white;
+  color: #9c27b0;
+}
+
+.swipe-button.cart:hover {
+  background-color: #9c27b0;
+  color: white;
+}
+
+.swipe-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.swipe-progress {
+  margin-top: 20px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.swipe-progress-text {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.swipe-progress-bar {
+  height: 6px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.swipe-progress-fill {
+  height: 100%;
+  background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.swipe-direction {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  opacity: 0;
+  animation: fadeInOut 2s ease;
+}
+
+.swipe-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 500px;
+  width: 100%;
+}
+
+.swipe-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+.no-more-products {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 400px;
+  margin-top: 20px;
+}
+
+.no-more-products h2 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.no-more-products p {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.view-liked-button, .restart-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.view-liked-button:hover, .restart-button:hover {
+  background-color: #2980b9;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.restart-button {
+  background-color: #4caf50;
+}
+
+.restart-button:hover {
+  background-color: #388e3c;
+}
+
+.liked-count {
+  display: block;
+  margin: 20px auto;
+  max-width: 300px;
+}
+
+.swipe-notification {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 30px;
+  font-size: 1rem;
+  z-index: 1000;
+  transition: bottom 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.swipe-notification.show {
+  bottom: 30px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .swipe-shop-header h1 {
+    font-size: 2rem;
+  }
+  
+  .swipe-shop-header p {
+    font-size: 1rem;
+  }
+  
+  .swipe-card-container {
+    height: 450px;
+  }
+  
+  .swipe-button {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+    margin: 0 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .swipe-shop-container {
+    padding: 15px;
+  }
+  
+  .swipe-shop-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .swipe-card-container {
+    height: 400px;
+  }
+  
+  .card-info h2 {
+    font-size: 1.5rem;
+  }
+  
+  .price, .discounted-price {
+    font-size: 1.2rem;
+  }
+  
+  .swipe-button {
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+    margin: 0 4px;
+  }
+  
+  .product-description {
+    font-size: 0.9rem;
+  }
+} 
